@@ -24,4 +24,6 @@ protected:
 
 	float m_cameraX, m_cameraY;
 	float m_timer;
+	float nPx;
+	float nPy;
 };
