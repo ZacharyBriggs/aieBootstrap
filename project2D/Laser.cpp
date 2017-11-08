@@ -2,7 +2,7 @@
 
 Laser::Laser()
 {
-	mPos.mY = 200;
+	mPos.mY = 100;
 }
 Laser::~Laser()
 {

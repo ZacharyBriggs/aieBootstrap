@@ -26,7 +26,7 @@ bool Application2D::startup() {
 	m_timer = 0;
 
 	mPlayer = new Player;
-	mLaser = new Laser[255];
+	mLaser = new Laser[3];
 	mEnemy = new Enemy;
 	mLaserNum = 0;
 	return true;
@@ -54,14 +54,20 @@ void Application2D::update(float deltaTime) {
 		mPlayer->mPos.mX = 1279;
 	if (mPlayer->mPos.mX < 0)
 		mPlayer->mPos.mX = 1;
-	Laser *temp = new Laser[mLaserNum];
-	for (int i = 0; i < mLaserNum; i++)
-		temp[i] = mLaser[i];
-	delete mLaser;
-	Laser *mLaser = new Laser[mLaserNum + 1];
-	for (int i = 0; i < mLaserNum; i++)
-		mLaser[i] = temp[i];
-	delete temp;
+
+	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+	{
+		mLaser[mLaserNum] = mPlayer->Shoot();
+		/*mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);*/
+		Laser *temp = new Laser[mLaserNum];
+		for (int i = 0; i < mLaserNum; i++)
+			temp[i] = mLaser[i];
+		delete mLaser;
+		Laser *mLaser = new Laser[mLaserNum + 1];
+		for (int i = 0; i < mLaserNum; i++)
+			mLaser[i] = temp[i];
+		delete temp;
+	}
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -94,12 +100,7 @@ void Application2D::draw() {
 	// draw a moving purple circle
 	/*m_2dRenderer->setRenderColour(1, 0, 1, 1);
 	m_2dRenderer->drawCircle(sin(m_timer) * 100 + 600, 150, 50);*/
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
-	{
-		mLaser[mLaserNum] = mPlayer->Shoot();
-		mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);
-		mLaserNum++;
-	}
+
 	//// draw a rotating red box
 	//m_2dRenderer->setRenderColour(1, 0, 0, 1);
 	//m_2dRenderer->drawBox(600, 500, 60, 20, m_timer);

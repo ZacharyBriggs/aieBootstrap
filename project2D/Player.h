@@ -7,5 +7,4 @@ public:
 	Player();
 	~Player();
 	Laser Shoot();
-
 };
