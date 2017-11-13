@@ -14,3 +14,11 @@ Laser Player::Shoot()
 	Laser shot;
 	return shot;
 }
+void Player::Fire()
+{
+
+}
+void Player::Update()
+{
+
+}

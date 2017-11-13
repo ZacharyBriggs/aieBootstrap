@@ -3,9 +3,10 @@
 Laser::Laser()
 {
 	mPos.mY = 100;
-	mPos.mX = 100;
+	mPos.mX = 640;
 	mScale.mX = 10;
 	mScale.mY = 25;
+	mIsFired = false;
 }
 Laser::~Laser()
 {

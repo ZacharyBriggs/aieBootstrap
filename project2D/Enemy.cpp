@@ -7,7 +7,6 @@ Enemy::Enemy()
 	mScale.mX = 150;
 	mScale.mY = 20;
 }
-
 Enemy::~Enemy()
 {
 }

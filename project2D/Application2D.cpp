@@ -57,20 +57,23 @@ void Application2D::update(float deltaTime) {
 
 	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
 	{
-		if(mLaserNum != 0)
-			mLaser[mLaserNum-1] = mPlayer->Shoot();
+		if (mLaserNum != 0)
+			mLaser[mLaserNum - 1] = mPlayer->Shoot();
 		else
 			mLaser[mLaserNum] = mPlayer->Shoot();
-		Laser *temp = new Laser[mLaserNum+1];
+		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
 		delete[] mLaser;
-		mLaser = new Laser[mLaserNum+1];
+		mLaser = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i] = temp[i];
 		delete[] temp;
+		mLaser[mLaserNum].mIsFired = true;
 		mLaserNum++;
 	}
+	if (mLaser[mLaserNum].mPos.mX < 790 && mLaser[mLaserNum].mPos.mX > 490 && mLaser[mLaserNum].mPos.mY > 580 && mLaser[mLaserNum].mPos.mY < 620)
+		mEnemy->mPos.mY += 500.0f * deltaTime;
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -87,33 +90,14 @@ void Application2D::draw() {
 	m_2dRenderer->begin();
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
 	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
+
+	for (int i = 0; i < mLaserNum; i++)
+	{
+		if (mLaser[i].mIsFired)
+			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, 20, 20);
+	}
 	m_2dRenderer->setRenderColour(1, 0, 0, 1);
 	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemy->mScale.mX, mEnemy->mScale.mY);
-	if(input->isKeyDown(aie::INPUT_KEY_SPACE))
-		mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);
-	//// demonstrate animation
-	//m_2dRenderer->setUVRect(int(m_timer) % 8 / 8.0f, 0, 1.f / 8, 1.f / 8);
-	//m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
-
-	//// demonstrate spinning sprite
-	//m_2dRenderer->setUVRect(0,0,1,1);
-	//m_2dRenderer->drawSprite(m_shipTexture, 600, 400, 0, 0, m_timer, 1);
-
-	//// draw a thin line
-	//m_2dRenderer->drawLine(300, 300, 600, 400, 2, 1);
-
-	// draw a moving purple circle
-	/*m_2dRenderer->setRenderColour(1, 0, 1, 1);
-	m_2dRenderer->drawCircle(sin(m_timer) * 100 + 600, 150, 50);*/
-
-	//// draw a rotating red box
-	//m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	//m_2dRenderer->drawBox(600, 500, 60, 20, m_timer);
-
-	//// draw a slightly rotated sprite with no texture, coloured yellow
-	//m_2dRenderer->setRenderColour(1, 1, 0, 1);
-	//m_2dRenderer->drawSprite(nullptr, 400, 400, 50, 50, 3.14159f * 0.25f, 1);
-	//
 	// output some text, uses the last used colour
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	char fps[32];
