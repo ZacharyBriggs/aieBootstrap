@@ -8,5 +8,5 @@ public:
 	~Player();
 	Laser Shoot();
 	void Fire();
-	void Update()
+	void Update();
 };
