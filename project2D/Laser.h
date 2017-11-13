@@ -7,4 +7,5 @@ public:
 	Laser();
 	~Laser();
 	void Draw(aie::Renderer2D *rend,float timer,Entity *player,aie::Texture *laser);
+
 };

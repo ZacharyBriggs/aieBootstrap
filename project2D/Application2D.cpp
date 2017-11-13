@@ -26,7 +26,7 @@ bool Application2D::startup() {
 	m_timer = 0;
 
 	mPlayer = new Player;
-	mLaser = new Laser[3];
+	mLaser = new Laser[1];
 	mEnemy = new Enemy;
 	mLaserNum = 0;
 	return true;
@@ -57,16 +57,19 @@ void Application2D::update(float deltaTime) {
 
 	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
 	{
-		mLaser[mLaserNum] = mPlayer->Shoot();
-		/*mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);*/
-		Laser *temp = new Laser[mLaserNum];
+		if(mLaserNum != 0)
+			mLaser[mLaserNum-1] = mPlayer->Shoot();
+		else
+			mLaser[mLaserNum] = mPlayer->Shoot();
+		Laser *temp = new Laser[mLaserNum+1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
-		delete mLaser;
-		Laser *mLaser = new Laser[mLaserNum + 1];
+		delete[] mLaser;
+		mLaser = new Laser[mLaserNum+1];
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i] = temp[i];
-		delete temp;
+		delete[] temp;
+		mLaserNum++;
 	}
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -83,9 +86,11 @@ void Application2D::draw() {
 	// begin drawing sprites
 	m_2dRenderer->begin();
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
-	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, 60, 60);
+	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
 	m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, 150, 20);
+	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemy->mScale.mX, mEnemy->mScale.mY);
+	if(input->isKeyDown(aie::INPUT_KEY_SPACE))
+		mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);
 	//// demonstrate animation
 	//m_2dRenderer->setUVRect(int(m_timer) % 8 / 8.0f, 0, 1.f / 8, 1.f / 8);
 	//m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);

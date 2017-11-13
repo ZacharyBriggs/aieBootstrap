@@ -2,8 +2,8 @@
 
 Entity::Entity()
 {
-	mPos.mX = 640;
-	mPos.mY = 100;
+	mPos.mX = 0;
+	mPos.mY = 0;
 }
 Entity::~Entity()
 {

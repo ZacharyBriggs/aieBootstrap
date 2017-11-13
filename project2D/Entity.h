@@ -4,6 +4,7 @@ class Entity
 {
 public:
 	Vector2 mPos;
+	Vector2 mScale;
 	Entity();
 	~Entity();
 };
