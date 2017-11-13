@@ -10,3 +10,11 @@ Enemy::Enemy()
 Enemy::~Enemy()
 {
 }
+
+void Enemy::Fire()
+{
+}
+
+void Enemy::Update()
+{
+}
