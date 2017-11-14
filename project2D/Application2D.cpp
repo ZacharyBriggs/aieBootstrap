@@ -54,6 +54,7 @@ void Application2D::update(float deltaTime) {
 		mPlayer->mPos.mX = 1249;
 	if (mPlayer->mPos.mX < 30)
 		mPlayer->mPos.mX = 29;
+
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		if (mLaserNum != 0)
@@ -75,6 +76,16 @@ void Application2D::update(float deltaTime) {
 		mLaserNum++;
 	}
 
+	for (int i = 0; i < mLaserNum; i++)
+	{
+		if (mLaser[i].mPos.mX > mEnemy->mPos.mX - mEnemy->mScale.mX && mLaser[i].mPos.mX < mEnemy->mPos.mX + mEnemy->mScale.mX)
+		{
+			if (mLaser[i].mPos.mY > mEnemy->mPos.mY - mEnemy->mScale.mY && mLaser[i].mPos.mY < mEnemy->mPos.mY + mEnemy->mScale.mY)
+			{
+				delete mEnemy;
+			}
+		}
+	}
 	for (int i = 0; i < mLaserNum; i ++)
 	{
 		mLaser[i].Update(deltaTime);
@@ -99,7 +110,10 @@ void Application2D::draw() {
 	for (int i = 0; i < mLaserNum; i++)
 	{
 		if (mLaser[i].mIsFired)
-			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, 20, 20);
+		{
+			m_2dRenderer->setRenderColour(1, 1, 1, 1);
+			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
+		}
 	}
 	m_2dRenderer->setRenderColour(1, 0, 0, 1);
 	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemy->mScale.mX, mEnemy->mScale.mY);
