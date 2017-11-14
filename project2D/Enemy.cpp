@@ -1,5 +1,4 @@
 #include "Enemy.h"
-
 Enemy::Enemy()
 {
 	mPos.mX = 640;

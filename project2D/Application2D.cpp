@@ -2,16 +2,14 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
-
-Application2D::Application2D() {
-
+Application2D::Application2D()
+{
 }
-
-Application2D::~Application2D() {
-
+Application2D::~Application2D()
+{
 }
-
-bool Application2D::startup() {
+bool Application2D::startup()
+{
 
 	m_2dRenderer = new aie::Renderer2D();
 
@@ -28,19 +26,21 @@ bool Application2D::startup() {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
 	mEnemy = new Enemy;
+	mBoundarylhs = new Boundary(0);
+	mBoundaryrhs = new Boundary(1280);
 	mLaserNum = 0;
 	return true;
 }
-
-void Application2D::shutdown() {
+void Application2D::shutdown()
+{
 
 	delete m_font;
 	delete m_texture;
 	delete m_shipTexture;
 	delete m_2dRenderer;
 }
-
-void Application2D::update(float deltaTime) {
+void Application2D::update(float deltaTime)
+{
 
 	m_timer += deltaTime;
 	// input example
@@ -58,13 +58,9 @@ void Application2D::update(float deltaTime) {
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		if (mLaserNum != 0)
-		{
 			mLaser[mLaserNum - 1].Fire(playerPos);
-		}
 		else
-		{
 			mLaser[mLaserNum].Fire(playerPos);
-		}
 		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
@@ -78,7 +74,7 @@ void Application2D::update(float deltaTime) {
 
 	for (int i = 0; i < mLaserNum; i++)
 	{
-		if (mLaser[i].mPos.mX > mEnemy->mPos.mX - mEnemy->mScale.mX && mLaser[i].mPos.mX < mEnemy->mPos.mX + mEnemy->mScale.mX)
+		if (mLaser[i].mPos.mX > mEnemy->mPos.mX - (mEnemy->mScale.mX/2) && mLaser[i].mPos.mX < mEnemy->mPos.mX + (mEnemy->mScale.mX/2))
 		{
 			if (mLaser[i].mPos.mY > mEnemy->mPos.mY - mEnemy->mScale.mY && mLaser[i].mPos.mY < mEnemy->mPos.mY + mEnemy->mScale.mY)
 			{
@@ -94,8 +90,8 @@ void Application2D::update(float deltaTime) {
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
-
-void Application2D::draw() {
+void Application2D::draw()
+{
 	// wipe the screen to the background colour
 	clearScreen();
 	aie::Input* input = aie::Input::getInstance();

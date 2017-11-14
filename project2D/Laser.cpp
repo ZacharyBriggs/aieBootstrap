@@ -1,5 +1,4 @@
 #include "Laser.h"
-
 Laser::Laser()
 {
 	mPos.mY = 100;

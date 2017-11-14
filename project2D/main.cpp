@@ -3,7 +3,8 @@
 #include <Vector3.h>
 #include <Vector4.h>
 
-int main() {
+int main()
+{
 
 	// allocation
 	auto app = new Application2D();

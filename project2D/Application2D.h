@@ -1,13 +1,13 @@
 #pragma once
-
 #include "Application.h"
 #include "Renderer2D.h"
 #include "Entity.h"
 #include "Laser.h"
 #include "Enemy.h"
 #include "Player.h"
-
-class Application2D : public aie::Application {
+#include "Boundary.h"
+class Application2D : public aie::Application
+{
 public:
 
 	Application2D();
@@ -34,5 +34,7 @@ protected:
 	Player *mPlayer;
 	Laser *mLaser;
 	Enemy *mEnemy;
+	Boundary *mBoundarylhs;
+	Boundary *mBoundaryrhs;
 	int mLaserNum;
 };
