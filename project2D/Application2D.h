@@ -5,7 +5,6 @@
 #include "Laser.h"
 #include "Enemy.h"
 #include "Player.h"
-#include "Boundary.h"
 class Application2D : public aie::Application
 {
 public:
@@ -33,8 +32,8 @@ protected:
 	float m_timer;
 	Player *mPlayer;
 	Laser *mLaser;
-	Enemy *mEnemy;
-	Boundary *mBoundarylhs;
-	Boundary *mBoundaryrhs;
+	Laser *mEnemyLaser;
+	Enemy *mEnemies;
 	int mLaserNum;
+	int mEnemyLaserNum;
 };

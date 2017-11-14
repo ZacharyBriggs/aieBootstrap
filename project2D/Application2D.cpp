@@ -25,10 +25,23 @@ bool Application2D::startup()
 
 	mPlayer = new Player;
 	mLaser = new Laser[1];
-	mEnemy = new Enemy;
-	mBoundarylhs = new Boundary(0);
-	mBoundaryrhs = new Boundary(1280);
+	mEnemyLaser = new Laser[1];
+	mEnemies = new Enemy[15];
+	int enePosX = 450;
+	int enePosY = 600;
+	for (int i = 0; i < 15; i++)
+	{
+		mEnemies[i].mPos.mX = enePosX;
+		mEnemies[i].mPos.mY = enePosY;
+		enePosX += 100;
+		if (enePosX == 950)
+		{
+			enePosX = 450;
+			enePosY -= 100;
+		}
+	}
 	mLaserNum = 0;
+	mEnemyLaserNum = 0;
 	return true;
 }
 void Application2D::shutdown()
@@ -74,11 +87,14 @@ void Application2D::update(float deltaTime)
 
 	for (int i = 0; i < mLaserNum; i++)
 	{
-		if (mLaser[i].mPos.mX > mEnemy->mPos.mX - (mEnemy->mScale.mX/2) && mLaser[i].mPos.mX < mEnemy->mPos.mX + (mEnemy->mScale.mX/2))
+		for(int e = 0; e<15;e++)
+		if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX/2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX/2))
 		{
-			if (mLaser[i].mPos.mY > mEnemy->mPos.mY - mEnemy->mScale.mY && mLaser[i].mPos.mY < mEnemy->mPos.mY + mEnemy->mScale.mY)
+			if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
 			{
-				delete mEnemy;
+				mEnemies[e].mIsAlive = false;
+				mEnemies[e].mPos.mY = 0;
+				mLaser[i].mIsFired = false;
 			}
 		}
 	}
@@ -111,8 +127,22 @@ void Application2D::draw()
 			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
 		}
 	}
-	m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemy->mScale.mX, mEnemy->mScale.mY);
+	/*for (int i = 0; i < mEnemyLaserNum; i++)
+	{
+		if (mLaser[i].mIsFired)
+		{
+			m_2dRenderer->setRenderColour(1, 0, 0, 1);
+			m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemyLaser[i].mScale.mX, mLaser[i].mScale.mY);
+		}
+	}*/
+	for (int i = 0; i < 15; i++)
+	{
+		if (mEnemies[i].mIsAlive)
+		{
+			m_2dRenderer->setRenderColour(1, 0, 0, 1);
+			m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
+		}
+	}
 	// output some text, uses the last used colour
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	char fps[32];
