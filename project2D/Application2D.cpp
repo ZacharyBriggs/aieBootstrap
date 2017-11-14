@@ -31,6 +31,7 @@ bool Application2D::startup()
 	deadEnemies = 0;
 	int enePosX = 450;
 	int enePosY = 600;
+	//Initilizes and assigns all the enemies positions
 	for (int i = 0; i < 15; i++)
 	{
 		mEnemies[i].mPos.mX = enePosX;
@@ -62,15 +63,18 @@ void Application2D::update(float deltaTime)
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
+	//Player movement
 	if (input->isKeyDown(aie::INPUT_KEY_A))
 		mPlayer->mPos.mX -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		mPlayer->mPos.mX += 500.0f * deltaTime;
+	//Boundaries
 	if (mPlayer->mPos.mX > 1250)
 		mPlayer->mPos.mX = 1249;
 	if (mPlayer->mPos.mX < 30)
 		mPlayer->mPos.mX = 29;
 
+	//Player Firing
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		if (mLaserNum != 0)
@@ -87,7 +91,7 @@ void Application2D::update(float deltaTime)
 		delete[] temp;
 		mLaserNum++;
 	}
-
+	//Checking if lasers have hit an enemy
 	for (int i = 0; i < mLaserNum; i++)
 	{
 		for (int e = 0; e < 15; e++)
@@ -101,6 +105,7 @@ void Application2D::update(float deltaTime)
 				}
 			}
 	}
+	//Checking to see if all enemies are dead
 	deadEnemies = 0;
 	for (int e = 0; e < 15; e++)
 	{
@@ -109,6 +114,7 @@ void Application2D::update(float deltaTime)
 		if (deadEnemies == 15)
 			gameWon = true;
 	}
+	//Updates the lasers postion
 	for (int i = 0; i < mLaserNum; i ++)
 	{
 		mLaser[i].Update(deltaTime);
@@ -129,7 +135,7 @@ void Application2D::draw()
 	m_2dRenderer->begin();
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
 	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
-
+	//Draws the lasers if they are fired
 	for (int i = 0; i < mLaserNum; i++)
 	{
 		if (mLaser[i].mIsFired)
@@ -146,6 +152,7 @@ void Application2D::draw()
 			m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemyLaser[i].mScale.mX, mLaser[i].mScale.mY);
 		}
 	}*/
+	//Draws enemies if they are alive
 	for (int i = 0; i < 15; i++)
 	{
 		if (mEnemies[i].mIsAlive)
@@ -160,6 +167,7 @@ void Application2D::draw()
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
+	//Draws the victory screen
 	if (gameWon)
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 500, 500);
