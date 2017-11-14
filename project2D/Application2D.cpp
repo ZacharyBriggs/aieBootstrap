@@ -45,22 +45,25 @@ void Application2D::update(float deltaTime) {
 	m_timer += deltaTime;
 	// input example
 	aie::Input* input = aie::Input::getInstance();
-
+	Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
 	if (input->isKeyDown(aie::INPUT_KEY_A))
 		mPlayer->mPos.mX -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		mPlayer->mPos.mX += 500.0f * deltaTime;
-	if (mPlayer->mPos.mX > 1280)
-		mPlayer->mPos.mX = 1279;
-	if (mPlayer->mPos.mX < 0)
-		mPlayer->mPos.mX = 1;
-
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+	if (mPlayer->mPos.mX > 1250)
+		mPlayer->mPos.mX = 1249;
+	if (mPlayer->mPos.mX < 30)
+		mPlayer->mPos.mX = 29;
+	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		if (mLaserNum != 0)
-			mLaser[mLaserNum - 1] = mPlayer->Shoot();
+		{
+			mLaser[mLaserNum - 1].Fire(playerPos);
+		}
 		else
-			mLaser[mLaserNum] = mPlayer->Shoot();
+		{
+			mLaser[mLaserNum].Fire(playerPos);
+		}
 		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
@@ -69,11 +72,13 @@ void Application2D::update(float deltaTime) {
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i] = temp[i];
 		delete[] temp;
-		mLaser[mLaserNum].mIsFired = true;
 		mLaserNum++;
 	}
-	if (mLaser[mLaserNum].mPos.mX < 790 && mLaser[mLaserNum].mPos.mX > 490 && mLaser[mLaserNum].mPos.mY > 580 && mLaser[mLaserNum].mPos.mY < 620)
-		mEnemy->mPos.mY += 500.0f * deltaTime;
+
+	for (int i = 0; i < mLaserNum; i ++)
+	{
+		mLaser[i].Update(deltaTime);
+	}
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
