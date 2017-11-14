@@ -18,6 +18,7 @@ bool Application2D::startup()
 	m_triangle = new aie::Texture("./textures/triangle.png");
 	m_bullet = new aie::Texture("./textures/bullet.png");
 	m_background = new aie::Texture("./textures/space.png");
+	m_victory = new aie::Texture("./textures/victoryScreen.png");
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	m_cameraX = 0;
 	m_cameraY = 0;
@@ -27,6 +28,7 @@ bool Application2D::startup()
 	mLaser = new Laser[1];
 	mEnemyLaser = new Laser[1];
 	mEnemies = new Enemy[15];
+	deadEnemies = 0;
 	int enePosX = 450;
 	int enePosY = 600;
 	for (int i = 0; i < 15; i++)
@@ -42,6 +44,7 @@ bool Application2D::startup()
 	}
 	mLaserNum = 0;
 	mEnemyLaserNum = 0;
+	gameWon = false;
 	return true;
 }
 void Application2D::shutdown()
@@ -87,16 +90,24 @@ void Application2D::update(float deltaTime)
 
 	for (int i = 0; i < mLaserNum; i++)
 	{
-		for(int e = 0; e<15;e++)
-		if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX/2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX/2))
-		{
-			if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
+		for (int e = 0; e < 15; e++)
+			if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX / 2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX / 2))
 			{
-				mEnemies[e].mIsAlive = false;
-				mEnemies[e].mPos.mY = 0;
-				mLaser[i].mIsFired = false;
+				if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
+				{
+					mEnemies[e].mIsAlive = false;
+					mEnemies[e].mPos.mY = 0;
+					mLaser[i].mIsFired = false;
+				}
 			}
-		}
+	}
+	deadEnemies = 0;
+	for (int e = 0; e < 15; e++)
+	{
+		if (mEnemies[e].mIsAlive == false)
+ 			deadEnemies++;
+		if (deadEnemies == 15)
+			gameWon = true;
 	}
 	for (int i = 0; i < mLaserNum; i ++)
 	{
@@ -149,6 +160,10 @@ void Application2D::draw()
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
+	if (gameWon)
+	{
+		m_2dRenderer->drawSprite(m_victory, 640, 360, 500, 500);
+	}
 	// done drawing sprites
 	m_2dRenderer->end();
 }

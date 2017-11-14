@@ -26,6 +26,7 @@ protected:
 	aie::Texture*		m_background;
 	aie::Texture*		m_triangle;
 	aie::Texture*		m_bullet;
+	aie::Texture*		m_victory;
 	aie::Font*			m_font;
 
 	float m_cameraX, m_cameraY;
@@ -34,6 +35,8 @@ protected:
 	Laser *mLaser;
 	Laser *mEnemyLaser;
 	Enemy *mEnemies;
+	int deadEnemies;
 	int mLaserNum;
 	int mEnemyLaserNum;
+	bool gameWon;
 };
