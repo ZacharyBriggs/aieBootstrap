@@ -24,6 +24,7 @@ protected:
 	aie::Texture*		m_texture;
 	aie::Texture*		m_shipTexture;
 	aie::Texture*		m_background;
+	aie::Texture*		m_crews;
 	aie::Texture*		m_triangle;
 	aie::Texture*		m_bullet;
 	aie::Texture*		m_victory;
@@ -40,4 +41,5 @@ protected:
 	int mLaserNum;
 	int mEnemyLaserNum;
 	bool gameWon;
+	bool secret;
 };
