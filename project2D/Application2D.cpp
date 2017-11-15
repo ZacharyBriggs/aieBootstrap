@@ -19,6 +19,7 @@ bool Application2D::startup()
 	m_bullet = new aie::Texture("./textures/bullet.png");
 	m_background = new aie::Texture("./textures/space.png");
 	m_victory = new aie::Texture("./textures/victoryScreen.png");
+	m_failure = new aie::Texture("./textures/failureScreen.png");
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	m_cameraX = 0;
 	m_cameraY = 0;
@@ -29,8 +30,8 @@ bool Application2D::startup()
 	mEnemyLaser = new Laser[1];
 	mEnemies = new Enemy[15];
 	deadEnemies = 0;
-	int enePosX = 450;
-	int enePosY = 600;
+	float enePosX = 450;
+	float enePosY = 600;
 	//Initilizes and assigns all the enemies positions
 	for (int i = 0; i < 15; i++)
 	{
@@ -91,7 +92,7 @@ void Application2D::update(float deltaTime)
 		delete[] temp;
 		mLaserNum++;
 	}
-	//Checking if lasers have hit an enemy
+	//Checks if lasers hit an enemy
 	for (int i = 0; i < mLaserNum; i++)
 	{
 		for (int e = 0; e < 15; e++)
@@ -100,6 +101,7 @@ void Application2D::update(float deltaTime)
 				if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
 				{
 					mEnemies[e].mIsAlive = false;
+					mEnemies[e].DropWeapon();
 					mEnemies[e].mPos.mY = 0;
 					mLaser[i].mIsFired = false;
 				}
@@ -118,6 +120,18 @@ void Application2D::update(float deltaTime)
 	for (int i = 0; i < mLaserNum; i ++)
 	{
 		mLaser[i].Update(deltaTime);
+	}
+	//Enemy Movement
+	for (int i = 0; i < 15; i++)
+		mEnemies[i].Move(deltaTime);
+	//Checks to see if an enemy has touched the player
+	for (int i = 0; i < 15; i++)
+	{
+		if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
+		{
+			if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
+				mPlayer->mIsAlive = false;
+		}
 	}
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -171,6 +185,10 @@ void Application2D::draw()
 	if (gameWon)
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 500, 500);
+	}
+	if (mPlayer->mIsAlive == false)
+	{
+		m_2dRenderer->drawSprite(m_failure, 640, 360, 500, 500);
 	}
 	// done drawing sprites
 	m_2dRenderer->end();

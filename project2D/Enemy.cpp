@@ -7,9 +7,20 @@ Enemy::Enemy()
 	mScale.mY = 50;
 	mIsAlive = true;
 }
-Enemy::Enemy(int posX, int posY)
+Enemy::Enemy(float posX, float posY)
 {
 }
 Enemy::~Enemy()
 {
+}
+void Enemy::Fire()
+{
+}
+void Enemy::Move(float timer)
+{
+	mPos.mY -= 50.0f * timer;
+}
+void Enemy::DropWeapon()
+{
+	Weapon drop(mPos.mX,mPos.mY);
 }

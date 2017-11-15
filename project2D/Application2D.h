@@ -27,6 +27,7 @@ protected:
 	aie::Texture*		m_triangle;
 	aie::Texture*		m_bullet;
 	aie::Texture*		m_victory;
+	aie::Texture*		m_failure;
 	aie::Font*			m_font;
 
 	float m_cameraX, m_cameraY;

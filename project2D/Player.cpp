@@ -5,6 +5,7 @@ Player::Player()
 	mPos.mY = 100;
 	mScale.mX = 60;
 	mScale.mY = 60;
+	mIsAlive = true;
 }
 Player::~Player()
 {
