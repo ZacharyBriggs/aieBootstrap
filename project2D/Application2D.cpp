@@ -80,8 +80,8 @@ void Application2D::update(float deltaTime)
 	{
 		if (mLaserNum != 0)
 			mLaser[mLaserNum - 1].Fire(playerPos);
-		else
-			mLaser[mLaserNum].Fire(playerPos);
+		/*else
+			mLaser[mLaserNum].Fire(playerPos);*/
 		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
@@ -102,7 +102,7 @@ void Application2D::update(float deltaTime)
 				{
 					mEnemies[e].mIsAlive = false;
 					mEnemies[e].DropWeapon();
-					mEnemies[e].mPos.mY = 0;
+					mEnemies[e].mPos.mY = 10000;
 					mLaser[i].mIsFired = false;
 				}
 			}
@@ -127,6 +127,8 @@ void Application2D::update(float deltaTime)
 	//Checks to see if an enemy has touched the player
 	for (int i = 0; i < 15; i++)
 	{
+		if (mEnemies[i].mPos.mY < 0)
+			mPlayer->mIsAlive = false;
 		if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
 		{
 			if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
@@ -148,7 +150,8 @@ void Application2D::draw()
 	// begin drawing sprites
 	m_2dRenderer->begin();
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
-	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
+	if(mPlayer->mIsAlive)
+		m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
 	//Draws the lasers if they are fired
 	for (int i = 0; i < mLaserNum; i++)
 	{
