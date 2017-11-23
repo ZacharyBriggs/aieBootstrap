@@ -13,7 +13,6 @@ public:
 	Matrix2 operator*(int &other);
 	Matrix2 RotateX(float angle);
 	Matrix2 RotateY(float angle);
-	Matrix2 RotateZ(float angle);
 	friend std::istream& operator >> (std::istream &input, Matrix2 &other);
 	friend std::ostream& operator << (std::ostream &output, Matrix2 &other);
 };
