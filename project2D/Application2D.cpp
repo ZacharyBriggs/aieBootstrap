@@ -27,7 +27,6 @@ bool Application2D::startup()
 	m_timer = 0;
 	mPlayer = new Player;
 	mLaser = new Laser[1];
-	mEnemyLaser = new Laser[1];
 	mEnemies = new Enemy[15];
 	deadEnemies = 0;
 	float enePosX = 450;
@@ -45,7 +44,6 @@ bool Application2D::startup()
 		}
 	}
 	mLaserNum = 0;
-	mEnemyLaserNum = 0;
 	gameWon = false;
 	secret = false;
 	return true;
@@ -101,8 +99,7 @@ void Application2D::update(float deltaTime)
 				if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
 				{
 					mEnemies[e].mIsAlive = false;
-					mEnemies[e].DropWeapon();
-					mEnemies[e].mPos.mX = 10000;
+					mEnemies[e].mPos.mY = 10000;
 					mLaser[i].mIsFired = false;
 					mLaser[i].mPos.mX = 1000;
 				}
@@ -165,14 +162,6 @@ void Application2D::draw()
 			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
 		}
 	}
-	/*for (int i = 0; i < mEnemyLaserNum; i++)
-	{
-		if (mLaser[i].mIsFired)
-		{
-			m_2dRenderer->setRenderColour(1, 0, 0, 1);
-			m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemyLaser[i].mScale.mX, mLaser[i].mScale.mY);
-		}
-	}*/
 	//Draws enemies if they are alive
 	for (int i = 0; i < 15; i++)
 	{

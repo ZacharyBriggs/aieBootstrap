@@ -9,5 +9,4 @@ public:
 	bool mIsFired;
 	void Fire(Vector2 pos);
 	void Update(float timer);
-	void Draw(aie::Renderer2D *rend,float timer,Entity *player,aie::Texture *laser);
 };

@@ -35,11 +35,9 @@ protected:
 	float m_timer;
 	Player *mPlayer;
 	Laser *mLaser;
-	Laser *mEnemyLaser;
 	Enemy *mEnemies;
 	int deadEnemies;
 	int mLaserNum;
-	int mEnemyLaserNum;
 	bool gameWon;
 	bool secret;
 };
