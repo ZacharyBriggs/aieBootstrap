@@ -2,16 +2,14 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
-
-Application2D::Application2D() {
-
+Application2D::Application2D()
+{
 }
-
-Application2D::~Application2D() {
-
+Application2D::~Application2D()
+{
 }
-
-bool Application2D::startup() {
+bool Application2D::startup()
+{
 
 	m_2dRenderer = new aie::Renderer2D();
 
@@ -20,101 +18,185 @@ bool Application2D::startup() {
 	m_triangle = new aie::Texture("./textures/triangle.png");
 	m_bullet = new aie::Texture("./textures/bullet.png");
 	m_background = new aie::Texture("./textures/space.png");
+	m_crews = new aie::Texture("./textures/crews.png");
+	m_victory = new aie::Texture("./textures/victoryScreen.png");
+	m_failure = new aie::Texture("./textures/failureScreen.png");
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	m_cameraX = 0;
 	m_cameraY = 0;
 	m_timer = 0;
-
 	mPlayer = new Player;
-	mLaser = new Laser[3];
-	mEnemy = new Enemy;
+	mLaser = new Laser[1];
+	mEnemyLaser = new Laser[1];
+	mEnemies = new Enemy[15];
+	deadEnemies = 0;
+	float enePosX = 450;
+	float enePosY = 600;
+	//Initilizes and assigns all the enemies positions
+	for (int i = 0; i < 15; i++)
+	{
+		mEnemies[i].mPos.mX = enePosX;
+		mEnemies[i].mPos.mY = enePosY;
+		enePosX += 100;
+		if (enePosX == 950)
+		{
+			enePosX = 450;
+			enePosY -= 100;
+		}
+	}
 	mLaserNum = 0;
+	mEnemyLaserNum = 0;
+	gameWon = false;
+	secret = false;
 	return true;
 }
-
-void Application2D::shutdown() {
+void Application2D::shutdown()
+{
 
 	delete m_font;
 	delete m_texture;
 	delete m_shipTexture;
 	delete m_2dRenderer;
 }
-
-void Application2D::update(float deltaTime) {
+void Application2D::update(float deltaTime)
+{
 
 	m_timer += deltaTime;
 	// input example
 	aie::Input* input = aie::Input::getInstance();
-
+	Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
+	//Player movement
 	if (input->isKeyDown(aie::INPUT_KEY_A))
 		mPlayer->mPos.mX -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		mPlayer->mPos.mX += 500.0f * deltaTime;
-	if (mPlayer->mPos.mX > 1280)
-		mPlayer->mPos.mX = 1279;
-	if (mPlayer->mPos.mX < 0)
-		mPlayer->mPos.mX = 1;
-
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+	//Boundaries
+	if (mPlayer->mPos.mX > 1250)
+		mPlayer->mPos.mX = 1249;
+	if (mPlayer->mPos.mX < 30)
+		mPlayer->mPos.mX = 29;
+	//Player Firing
+	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
-		mLaser[mLaserNum] = mPlayer->Shoot();
-		/*mLaser[mLaserNum].Draw(m_2dRenderer, m_timer, mPlayer, m_bullet);*/
-		Laser *temp = new Laser[mLaserNum];
+		if (mLaserNum != 0)
+			mLaser[mLaserNum - 1].Fire(playerPos);
+		/*else
+			mLaser[mLaserNum].Fire(playerPos);*/
+		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
-		delete mLaser;
-		Laser *mLaser = new Laser[mLaserNum + 1];
+		delete[] mLaser;
+		mLaser = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i] = temp[i];
-		delete temp;
+		delete[] temp;
+		mLaserNum++;
+	}
+	//Checks if lasers hit an enemy
+	for (int i = 0; i < mLaserNum; i++)
+	{
+		for (int e = 0; e < 15; e++)
+			if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX / 2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX / 2))
+			{
+				if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
+				{
+					mEnemies[e].mIsAlive = false;
+					mEnemies[e].DropWeapon();
+					mEnemies[e].mPos.mX = 10000;
+					mLaser[i].mIsFired = false;
+					mLaser[i].mPos.mX = 1000;
+				}
+			}
+	}
+	//Checking to see if all enemies are dead
+	deadEnemies = 0;
+	for (int e = 0; e < 15; e++)
+	{
+		if (mEnemies[e].mIsAlive == false)
+ 			deadEnemies++;
+		if (deadEnemies == 15)
+			gameWon = true;
+	}
+	//Updates the lasers postion
+	for (int i = 0; i < mLaserNum; i ++)
+	{
+		mLaser[i].Update(deltaTime);
+	}
+	//Enemy Movement
+	for (int i = 0; i < 15; i++)
+		mEnemies[i].Move(deltaTime);
+	//Checks to see if an enemy has touched the player
+	for (int i = 0; i < 15; i++)
+	{
+		if (mEnemies[i].mPos.mY < 0)
+			mPlayer->mIsAlive = false;
+		if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
+		{
+			if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
+				mPlayer->mIsAlive = false;
+		}
 	}
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
-
-void Application2D::draw() {
+void Application2D::draw()
+{
 	// wipe the screen to the background colour
 	clearScreen();
 	aie::Input* input = aie::Input::getInstance();
 	// set the camera position before we begin rendering
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
-
 	// begin drawing sprites
 	m_2dRenderer->begin();
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
-	m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, 60, 60);
-	m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, 150, 20);
-	//// demonstrate animation
-	//m_2dRenderer->setUVRect(int(m_timer) % 8 / 8.0f, 0, 1.f / 8, 1.f / 8);
-	//m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
-
-	//// demonstrate spinning sprite
-	//m_2dRenderer->setUVRect(0,0,1,1);
-	//m_2dRenderer->drawSprite(m_shipTexture, 600, 400, 0, 0, m_timer, 1);
-
-	//// draw a thin line
-	//m_2dRenderer->drawLine(300, 300, 600, 400, 2, 1);
-
-	// draw a moving purple circle
-	/*m_2dRenderer->setRenderColour(1, 0, 1, 1);
-	m_2dRenderer->drawCircle(sin(m_timer) * 100 + 600, 150, 50);*/
-
-	//// draw a rotating red box
-	//m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	//m_2dRenderer->drawBox(600, 500, 60, 20, m_timer);
-
-	//// draw a slightly rotated sprite with no texture, coloured yellow
-	//m_2dRenderer->setRenderColour(1, 1, 0, 1);
-	//m_2dRenderer->drawSprite(nullptr, 400, 400, 50, 50, 3.14159f * 0.25f, 1);
-	//
+	if (input->wasKeyPressed(aie::INPUT_KEY_F3))
+		secret = true;
+	if(secret == true)
+		m_2dRenderer->drawSprite(m_crews, 640, 360, 1280, 720);
+	if(mPlayer->mIsAlive)
+		m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
+	//Draws the lasers if they are fired
+	for (int i = 0; i < mLaserNum; i++)
+	{
+		if (mLaser[i].mIsFired)
+		{
+			m_2dRenderer->setRenderColour(1, 1, 1, 1);
+			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
+		}
+	}
+	/*for (int i = 0; i < mEnemyLaserNum; i++)
+	{
+		if (mLaser[i].mIsFired)
+		{
+			m_2dRenderer->setRenderColour(1, 0, 0, 1);
+			m_2dRenderer->drawBox(mEnemy->mPos.mX, mEnemy->mPos.mY, mEnemyLaser[i].mScale.mX, mLaser[i].mScale.mY);
+		}
+	}*/
+	//Draws enemies if they are alive
+	for (int i = 0; i < 15; i++)
+	{
+		if (mEnemies[i].mIsAlive)
+		{
+			m_2dRenderer->setRenderColour(1, 0, 0, 1);
+			m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
+		}
+	}
 	// output some text, uses the last used colour
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	char fps[32];
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
+	//Draws the victory screen
+	if (gameWon)
+	{
+		m_2dRenderer->drawSprite(m_victory, 640, 360, 1280, 720);
+	}
+	if (mPlayer->mIsAlive == false)
+	{
+		m_2dRenderer->drawSprite(m_failure, 640, 360, 1280, 720);
+	}
 	// done drawing sprites
 	m_2dRenderer->end();
 }

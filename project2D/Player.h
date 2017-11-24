@@ -6,5 +6,5 @@ class Player : public Entity
 public:
 	Player();
 	~Player();
-	Laser Shoot();
+	bool mIsAlive;
 };
