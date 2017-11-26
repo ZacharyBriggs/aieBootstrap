@@ -21,6 +21,7 @@ bool Application2D::startup()
 	m_crews = new aie::Texture("./textures/crews.png");
 	m_victory = new aie::Texture("./textures/victoryScreen.png");
 	m_failure = new aie::Texture("./textures/failureScreen.png");
+	m_title = new aie::Texture("./textures/title.png");
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	m_cameraX = 0;
 	m_cameraY = 0;
@@ -146,6 +147,7 @@ void Application2D::draw()
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	// begin drawing sprites
 	m_2dRenderer->begin();
+	m_2dRenderer->drawSprite(m_title, 640, 360, 1280, 720);
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
 	if (input->wasKeyPressed(aie::INPUT_KEY_F3))
 		secret = true;
@@ -181,10 +183,32 @@ void Application2D::draw()
 	if (gameWon)
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 1280, 720);
+		m_2dRenderer->setRenderColour(0, 0, 0, 1);
+		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
+		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
+		{
+			gameWon = false;
+			delete mPlayer;
+			mPlayer = new Player;
+			delete[] mEnemies;
+			mEnemies = new Enemy[15];
+			delete[] mLaser;
+			mLaser = new Laser[15];
+		}
+		if (input->wasKeyPressed(aie::INPUT_KEY_N))
+			quit();
 	}
 	if (mPlayer->mIsAlive == false)
 	{
 		m_2dRenderer->drawSprite(m_failure, 640, 360, 1280, 720);
+		m_2dRenderer->setRenderColour(0, 0, 0, 1);
+		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
+		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
+		{
+			mPlayer->mIsAlive = true;
+		}
+		if (input->wasKeyPressed(aie::INPUT_KEY_N))
+			quit();
 	}
 	// done drawing sprites
 	m_2dRenderer->end();
