@@ -7,5 +7,6 @@ public:
 	Enemy();
 	Enemy(float posX, float posY);
 	~Enemy();
+	//Updates the enemy's position constantly so it may move foward
 	void Move(float timer);
 };

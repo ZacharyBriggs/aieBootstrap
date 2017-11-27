@@ -79,8 +79,6 @@ void Application2D::update(float deltaTime)
 	{
 		if (mLaserNum != 0)
 			mLaser[mLaserNum - 1].Fire(playerPos);
-		/*else
-			mLaser[mLaserNum].Fire(playerPos);*/
 		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
@@ -117,9 +115,7 @@ void Application2D::update(float deltaTime)
 	}
 	//Updates the lasers postion
 	for (int i = 0; i < mLaserNum; i ++)
-	{
 		mLaser[i].Update(deltaTime);
-	}
 	//Enemy Movement
 	for (int i = 0; i < 15; i++)
 		mEnemies[i].Move(deltaTime);
@@ -147,12 +143,12 @@ void Application2D::draw()
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	// begin drawing sprites
 	m_2dRenderer->begin();
-	m_2dRenderer->drawSprite(m_title, 640, 360, 1280, 720);
 	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
 	if (input->wasKeyPressed(aie::INPUT_KEY_F3))
 		secret = true;
 	if(secret == true)
 		m_2dRenderer->drawSprite(m_crews, 640, 360, 1280, 720);
+	//Draws the player's sprite if they're still alive
 	if(mPlayer->mIsAlive)
 		m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
 	//Draws the lasers if they are fired
@@ -180,14 +176,13 @@ void Application2D::draw()
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
 	//Draws the victory screen
-	if (gameWon)
+	if (gameWon == true)
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 1280, 720);
 		m_2dRenderer->setRenderColour(0, 0, 0, 1);
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
-		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
+		if (input->isKeyDown(aie::INPUT_KEY_Y))
 		{
-			gameWon = false;
 			delete mPlayer;
 			mPlayer = new Player;
 			delete[] mEnemies;
@@ -198,6 +193,7 @@ void Application2D::draw()
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();
 	}
+	//Draws the failure screen
 	if (mPlayer->mIsAlive == false)
 	{
 		m_2dRenderer->drawSprite(m_failure, 640, 360, 1280, 720);
@@ -205,7 +201,12 @@ void Application2D::draw()
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
 		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
 		{
-			mPlayer->mIsAlive = true;
+			delete mPlayer;
+			mPlayer = new Player;
+			delete[] mEnemies;
+			mEnemies = new Enemy[15];
+			delete[] mLaser;
+			mLaser = new Laser[15];
 		}
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();
