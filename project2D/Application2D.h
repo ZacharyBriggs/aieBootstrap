@@ -39,6 +39,7 @@ protected:
 	Enemy *mEnemies;
 	int deadEnemies;
 	int mLaserNum;
+	bool gameStart;
 	bool gameWon;
 	bool secret;
 };

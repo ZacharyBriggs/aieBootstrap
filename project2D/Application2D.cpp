@@ -27,6 +27,7 @@ bool Application2D::startup()
 	mPlayer = new Player;
 	mLaser = new Laser[1];
 	mEnemies = new Enemy[15];
+	gameStart = false;
 	deadEnemies = 0;
 	float enePosX = 450;
 	float enePosY = 600;
@@ -60,70 +61,73 @@ void Application2D::update(float deltaTime)
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
-	//Player movement
-	if (input->isKeyDown(aie::INPUT_KEY_A))
-		mPlayer->mPos.mX -= 500.0f * deltaTime;
-	if (input->isKeyDown(aie::INPUT_KEY_D))
-		mPlayer->mPos.mX += 500.0f * deltaTime;
-	//Boundaries
-	if (mPlayer->mPos.mX > 1250)
-		mPlayer->mPos.mX = 1249;
-	if (mPlayer->mPos.mX < 30)
-		mPlayer->mPos.mX = 29;
-	//Player Firing
-	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
+	if (gameStart)
 	{
-		if (mLaserNum != 0)
-			mLaser[mLaserNum - 1].Fire(playerPos);
-		Laser *temp = new Laser[mLaserNum + 1];
-		for (int i = 0; i < mLaserNum; i++)
-			temp[i] = mLaser[i];
-		delete[] mLaser;
-		mLaser = new Laser[mLaserNum + 1];
-		for (int i = 0; i < mLaserNum; i++)
-			mLaser[i] = temp[i];
-		delete[] temp;
-		mLaserNum++;
-	}
-	//Checks if lasers hit an enemy
-	for (int i = 0; i < mLaserNum; i++)
-	{
-		for (int e = 0; e < 15; e++)
-			if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX / 2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX / 2))
-			{
-				if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
-				{
-					mEnemies[e].mIsAlive = false;
-					mEnemies[e].mPos.mY = 10000;
-					mLaser[i].mIsFired = false;
-					mLaser[i].mPos.mX = 1000;
-				}
-			}
-	}
-	//Checking to see if all enemies are dead
-	deadEnemies = 0;
-	for (int e = 0; e < 15; e++)
-	{
-		if (mEnemies[e].mIsAlive == false)
- 			deadEnemies++;
-		if (deadEnemies == 15)
-			gameWon = true;
-	}
-	//Updates the lasers postion
-	for (int i = 0; i < mLaserNum; i ++)
-		mLaser[i].Update(deltaTime);
-	//Enemy Movement
-	for (int i = 0; i < 15; i++)
-		mEnemies[i].Move(deltaTime);
-	//Checks to see if an enemy has touched the player
-	for (int i = 0; i < 15; i++)
-	{
-		if (mEnemies[i].mPos.mY < 0)
-			mPlayer->mIsAlive = false;
-		if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
+		//Player movement
+		if (input->isKeyDown(aie::INPUT_KEY_A))
+			mPlayer->mPos.mX -= 250.0f * deltaTime;
+		if (input->isKeyDown(aie::INPUT_KEY_D))
+			mPlayer->mPos.mX += 250.0f * deltaTime;
+		//Boundaries
+		if (mPlayer->mPos.mX > 1250)
+			mPlayer->mPos.mX = 1249;
+		if (mPlayer->mPos.mX < 30)
+			mPlayer->mPos.mX = 29;
+		//Player Firing
+		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 		{
-			if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
+			if (mLaserNum != 0)
+				mLaser[mLaserNum - 1].Fire(playerPos);
+			Laser *temp = new Laser[mLaserNum + 1];
+			for (int i = 0; i < mLaserNum; i++)
+				temp[i] = mLaser[i];
+			delete[] mLaser;
+			mLaser = new Laser[mLaserNum + 1];
+			for (int i = 0; i < mLaserNum; i++)
+				mLaser[i] = temp[i];
+			delete[] temp;
+			mLaserNum++;
+		}
+		//Checks if lasers hit an enemy
+		for (int i = 0; i < mLaserNum; i++)
+		{
+			for (int e = 0; e < 15; e++)
+				if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX / 2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX / 2))
+				{
+					if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
+					{
+						mEnemies[e].mIsAlive = false;
+						mEnemies[e].mPos.mY = 10000;
+						mLaser[i].mIsFired = false;
+						mLaser[i].mPos.mX = 1000;
+					}
+				}
+		}
+		//Checking to see if all enemies are dead
+		deadEnemies = 0;
+		for (int e = 0; e < 15; e++)
+		{
+			if (mEnemies[e].mIsAlive == false)
+				deadEnemies++;
+			if (deadEnemies == 15)
+				gameWon = true;
+		}
+		//Updates the lasers postion
+		for (int i = 0; i < mLaserNum; i++)
+			mLaser[i].Update(deltaTime);
+		//Enemy Movement
+		for (int i = 0; i < 15; i++)
+			mEnemies[i].Move(deltaTime);
+		//Checks to see if an enemy has touched the player
+		for (int i = 0; i < 15; i++)
+		{
+			if (mEnemies[i].mPos.mY < 0)
 				mPlayer->mIsAlive = false;
+			if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
+			{
+				if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
+					mPlayer->mIsAlive = false;
+			}
 		}
 	}
 	// exit the application
@@ -139,30 +143,36 @@ void Application2D::draw()
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	// begin drawing sprites
 	m_2dRenderer->begin();
-	m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
-	if (input->wasKeyPressed(aie::INPUT_KEY_F3))
-		secret = true;
-	if(secret == true)
-		m_2dRenderer->drawSprite(m_crews, 640, 360, 1280, 720);
-	//Draws the player's sprite if they're still alive
-	if(mPlayer->mIsAlive)
-		m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
-	//Draws the lasers if they are fired
-	for (int i = 0; i < mLaserNum; i++)
+	m_2dRenderer->drawSprite(m_title, 640, 360, 1280, 720);
+	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
+		gameStart = true;
+	if (gameStart)
 	{
-		if (mLaser[i].mIsFired)
+		m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
+		if (input->wasKeyPressed(aie::INPUT_KEY_F3))
+			secret = true;
+		if (secret == true)
+			m_2dRenderer->drawSprite(m_crews, 640, 360, 1280, 720);
+		//Draws the player's sprite if they're still alive
+		if (mPlayer->mIsAlive)
+			m_2dRenderer->drawSprite(m_triangle, mPlayer->mPos.mX, mPlayer->mPos.mY, mPlayer->mScale.mX, mPlayer->mScale.mX);
+		//Draws the lasers if they are fired
+		for (int i = 0; i < mLaserNum; i++)
 		{
-			m_2dRenderer->setRenderColour(1, 1, 1, 1);
-			m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
+			if (mLaser[i].mIsFired)
+			{
+				m_2dRenderer->setRenderColour(1, 1, 1, 1);
+				m_2dRenderer->drawBox(mLaser[i].mPos.mX, mLaser[i].mPos.mY, mLaser[i].mScale.mX, mLaser[i].mScale.mY);
+			}
 		}
-	}
-	//Draws enemies if they are alive
-	for (int i = 0; i < 15; i++)
-	{
-		if (mEnemies[i].mIsAlive)
+		//Draws enemies if they are alive
+		for (int i = 0; i < 15; i++)
 		{
-			m_2dRenderer->setRenderColour(1, 0, 0, 1);
-			m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
+			if (mEnemies[i].mIsAlive)
+			{
+				m_2dRenderer->setRenderColour(1, 0, 0, 1);
+				m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
+			}
 		}
 	}
 	// output some text, uses the last used colour
