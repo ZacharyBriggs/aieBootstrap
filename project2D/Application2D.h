@@ -1,7 +1,6 @@
 #pragma once
 #include "Application.h"
 #include "Renderer2D.h"
-#include "Entity.h"
 #include "Laser.h"
 #include "Enemy.h"
 #include "Player.h"

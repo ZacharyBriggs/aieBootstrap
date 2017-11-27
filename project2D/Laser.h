@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include <Renderer2D.h>
 class Laser : public Entity
 {
 public:
