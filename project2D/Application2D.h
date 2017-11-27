@@ -20,12 +20,10 @@ public:
 protected:
 
 	aie::Renderer2D*	m_2dRenderer;
-	aie::Texture*		m_texture;
 	aie::Texture*		m_shipTexture;
 	aie::Texture*		m_background;
 	aie::Texture*		m_crews;
 	aie::Texture*		m_triangle;
-	aie::Texture*		m_bullet;
 	aie::Texture*		m_victory;
 	aie::Texture*		m_failure;
 	aie::Texture*		m_title;

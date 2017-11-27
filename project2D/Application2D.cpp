@@ -11,10 +11,8 @@ Application2D::~Application2D()
 bool Application2D::startup()
 {
 	m_2dRenderer = new aie::Renderer2D();
-	m_texture = new aie::Texture("./textures/numbered_grid.tga");
 	m_shipTexture = new aie::Texture("./textures/ship.png");
 	m_triangle = new aie::Texture("./textures/triangle.png");
-	m_bullet = new aie::Texture("./textures/bullet.png");
 	m_background = new aie::Texture("./textures/space.png");
 	m_crews = new aie::Texture("./textures/crews.png");
 	m_victory = new aie::Texture("./textures/victoryScreen.png");
@@ -32,7 +30,6 @@ bool Application2D::startup()
 void Application2D::shutdown()
 {
 	delete m_font;
-	delete m_texture;
 	delete m_shipTexture;
 	delete m_2dRenderer;
 }
@@ -193,9 +190,7 @@ void Application2D::draw()
 		m_2dRenderer->setRenderColour(0, 0, 0, 1);
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
 		if (input->isKeyDown(aie::INPUT_KEY_Y))
-		{
 			setup();
-		}
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();
 	}
@@ -206,9 +201,7 @@ void Application2D::draw()
 		m_2dRenderer->setRenderColour(0, 0, 0, 1);
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
 		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
-		{
 			setup();
-		}
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();
 	}
