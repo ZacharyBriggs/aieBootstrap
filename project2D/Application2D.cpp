@@ -10,9 +10,7 @@ Application2D::~Application2D()
 }
 bool Application2D::startup()
 {
-
 	m_2dRenderer = new aie::Renderer2D();
-
 	m_texture = new aie::Texture("./textures/numbered_grid.tga");
 	m_shipTexture = new aie::Texture("./textures/ship.png");
 	m_triangle = new aie::Texture("./textures/triangle.png");
@@ -51,7 +49,6 @@ bool Application2D::startup()
 }
 void Application2D::shutdown()
 {
-
 	delete m_font;
 	delete m_texture;
 	delete m_shipTexture;
@@ -59,7 +56,6 @@ void Application2D::shutdown()
 }
 void Application2D::update(float deltaTime)
 {
-
 	m_timer += deltaTime;
 	// input example
 	aie::Input* input = aie::Input::getInstance();
@@ -176,7 +172,7 @@ void Application2D::draw()
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
 	//Draws the victory screen
-	if (gameWon == true)
+	if (gameWon)
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 1280, 720);
 		m_2dRenderer->setRenderColour(0, 0, 0, 1);
