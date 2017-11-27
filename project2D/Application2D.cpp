@@ -24,10 +24,23 @@ bool Application2D::startup()
 	m_cameraX = 0;
 	m_cameraY = 0;
 	m_timer = 0;
+	gameStart = false;
+	setup();
+	return true;
+}
+
+void Application2D::shutdown()
+{
+	delete m_font;
+	delete m_texture;
+	delete m_shipTexture;
+	delete m_2dRenderer;
+}
+void Application2D::setup()
+{
 	mPlayer = new Player;
 	mLaser = new Laser[1];
 	mEnemies = new Enemy[15];
-	gameStart = false;
 	deadEnemies = 0;
 	float enePosX = 450;
 	float enePosY = 600;
@@ -46,14 +59,6 @@ bool Application2D::startup()
 	mLaserNum = 0;
 	gameWon = false;
 	secret = false;
-	return true;
-}
-void Application2D::shutdown()
-{
-	delete m_font;
-	delete m_texture;
-	delete m_shipTexture;
-	delete m_2dRenderer;
 }
 void Application2D::update(float deltaTime)
 {
@@ -189,12 +194,7 @@ void Application2D::draw()
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
 		if (input->isKeyDown(aie::INPUT_KEY_Y))
 		{
-			delete mPlayer;
-			mPlayer = new Player;
-			delete[] mEnemies;
-			mEnemies = new Enemy[15];
-			delete[] mLaser;
-			mLaser = new Laser[15];
+			setup();
 		}
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();
@@ -207,12 +207,7 @@ void Application2D::draw()
 		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
 		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
 		{
-			delete mPlayer;
-			mPlayer = new Player;
-			delete[] mEnemies;
-			mEnemies = new Enemy[15];
-			delete[] mLaser;
-			mLaser = new Laser[15];
+			setup();
 		}
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
 			quit();

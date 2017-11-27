@@ -13,7 +13,7 @@ public:
 
 	virtual bool startup();
 	virtual void shutdown();
-
+	virtual void setup();
 	virtual void update(float deltaTime);
 	virtual void draw();
 

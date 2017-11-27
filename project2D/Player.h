@@ -6,4 +6,5 @@ public:
 	Player();
 	~Player();
 	bool mIsAlive;
+	void Move(float timer);
 };
