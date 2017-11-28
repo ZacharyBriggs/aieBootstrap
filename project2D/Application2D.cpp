@@ -31,6 +31,12 @@ void Application2D::shutdown()
 {
 	delete m_font;
 	delete m_shipTexture;
+	delete m_triangle;
+	delete m_background;
+	delete m_crews;
+	delete m_victory;
+	delete m_failure;
+	delete m_title;
 	delete m_2dRenderer;
 }
 void Application2D::setup()
@@ -91,20 +97,8 @@ void Application2D::update(float deltaTime)
 			mLaserNum++;
 		}
 		//Checks if lasers hit an enemy
-		for (int i = 0; i < mLaserNum; i++)
-		{
-			for (int e = 0; e < 15; e++)
-				if (mLaser[i].mPos.mX > mEnemies[e].mPos.mX - (mEnemies[e].mScale.mX / 2) && mLaser[i].mPos.mX < mEnemies[e].mPos.mX + (mEnemies[e].mScale.mX / 2))
-				{
-					if (mLaser[i].mPos.mY > mEnemies[e].mPos.mY - mEnemies[e].mScale.mY && mLaser[i].mPos.mY < mEnemies[e].mPos.mY + mEnemies[e].mScale.mY)
-					{
-						mEnemies[e].mIsAlive = false;
-						mEnemies[e].mPos.mY = 10000;
-						mLaser[i].mIsFired = false;
-						mLaser[i].mPos.mX = 1000;
-					}
-				}
-		}
+		for (int e = 0; e < 15; e++)
+			mEnemies[e].HitCheck(mLaser, mLaserNum);
 		//Checking to see if all enemies are dead
 		deadEnemies = 0;
 		for (int e = 0; e < 15; e++)
