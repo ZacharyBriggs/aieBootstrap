@@ -10,11 +10,11 @@ Enemy::Enemy()
 Enemy::~Enemy()
 {
 }
-void Enemy::Move(float timer)
+void Enemy::Move(const float timer)
 {
 	mPos.mY -= 50.0f * timer;
 }
-void Enemy::LaserCheck(Laser *laser,int lasernum)
+void Enemy::LaserCheck(Laser *laser,const int lasernum)
 {
 	for (int i = 0; i < lasernum; i++)
 	{
@@ -26,6 +26,7 @@ void Enemy::LaserCheck(Laser *laser,int lasernum)
 				mPos.mY = 10000;
 				laser[i].mIsFired = false;
 				laser[i].mPos.mX = 1000;
+				laser[i].mPos.mY = 1000;
 			}
 		}
 	}

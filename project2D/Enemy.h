@@ -1,6 +1,5 @@
 #pragma once
 #include "Laser.h"
-
 class Enemy : public Entity
 {
 public:

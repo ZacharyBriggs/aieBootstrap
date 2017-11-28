@@ -10,13 +10,13 @@ Laser::Laser()
 Laser::~Laser()
 {
 }
-void Laser::Fire(Vector2 pos)
+void Laser::Fire(const Vector2 pos)
 {
 	mIsFired = true;
 	mPos.mX = pos.mX;
 	mPos.mY = pos.mY;
 }
-void Laser::Update(float timer)
+void Laser::Update(const float timer)
 {
 	if(mIsFired)
 		mPos.mY += 500.0f* timer;

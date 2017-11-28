@@ -40,12 +40,13 @@ void Application2D::setup()
 {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
-	mEnemies = new Enemy[15];
+	numEnemies = 20;
+	mEnemies = new Enemy[numEnemies];
 	deadEnemies = 0;
 	float enePosX = 450;
 	float enePosY = 600;
 	//Initilizes and assigns all the enemies positions
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < numEnemies; i++)
 	{
 		mEnemies[i].mPos.mX = enePosX;
 		mEnemies[i].mPos.mY = enePosY;
@@ -60,12 +61,12 @@ void Application2D::setup()
 	gameWon = false;
 	secret = false;
 }
-void Application2D::update(float deltaTime)
+void Application2D::update(const float deltaTime)
 {
 	m_timer += deltaTime;
 	// input example
 	aie::Input* input = aie::Input::getInstance();
-	Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
+	const Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
 	if (gameStart)
 	{
 		//Player movement
@@ -94,25 +95,25 @@ void Application2D::update(float deltaTime)
 			mLaserNum++;
 		}
 		//Checks if lasers hit an enemy
-		for (int e = 0; e < 15; e++)
+		for (int e = 0; e < numEnemies; e++)
 			mEnemies[e].LaserCheck(mLaser, mLaserNum);
 		//Checking to see if all enemies are dead
 		deadEnemies = 0;
-		for (int e = 0; e < 15; e++)
+		for (int e = 0; e < numEnemies; e++)
 		{
 			if (mEnemies[e].mIsAlive == false)
 				deadEnemies++;
-			if (deadEnemies == 15)
+			if (deadEnemies == numEnemies)
 				gameWon = true;
 		}
 		//Updates the lasers postion
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i].Update(deltaTime);
 		//Enemy Movement
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < numEnemies; i++)
 			mEnemies[i].Move(deltaTime);
 		//Checks to see if an enemy has touched the player
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < numEnemies; i++)
 		{
 			if (mEnemies[i].mPos.mY < 0)
 				mPlayer->mIsAlive = false;
@@ -157,7 +158,7 @@ void Application2D::draw()
 			}
 		}
 		//Draws enemies if they are alive
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < numEnemies; i++)
 		{
 			if (mEnemies[i].mIsAlive)
 			{

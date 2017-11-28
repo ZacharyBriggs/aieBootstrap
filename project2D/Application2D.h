@@ -20,7 +20,6 @@ public:
 protected:
 
 	aie::Renderer2D*	m_2dRenderer;
-	aie::Texture*		m_shipTexture;
 	aie::Texture*		m_background;
 	aie::Texture*		m_crews;
 	aie::Texture*		m_triangle;
@@ -33,6 +32,7 @@ protected:
 	float m_timer;
 	Player *mPlayer;
 	Laser *mLaser;
+	int numEnemies;
 	Enemy *mEnemies;
 	int deadEnemies;
 	int mLaserNum;
