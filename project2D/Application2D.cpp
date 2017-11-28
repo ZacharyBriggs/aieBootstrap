@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include <Vector2.h>
+
 Application2D::Application2D()
 {
 }
@@ -40,7 +42,7 @@ void Application2D::setup()
 {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
-	numEnemies = 20;
+	numEnemies = 15;
 	mEnemies = new Enemy[numEnemies];
 	deadEnemies = 0;
 	float enePosX = 450;
