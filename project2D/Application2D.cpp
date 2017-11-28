@@ -165,13 +165,14 @@ void Application2D::draw()
 				m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
 			}
 		}
+
+		// output some text, uses the last used colour
+		m_2dRenderer->setRenderColour(1, 1, 1, 1);
+		char fps[32];
+		sprintf_s(fps, 32, "FPS: %i", getFPS());
+		m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
+		m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
 	}
-	// output some text, uses the last used colour
-	m_2dRenderer->setRenderColour(1, 1, 1, 1);
-	char fps[32];
-	sprintf_s(fps, 32, "FPS: %i", getFPS());
-	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
-	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, 720 - 64);
 	//Draws the victory screen
 	if (gameWon)
 	{
