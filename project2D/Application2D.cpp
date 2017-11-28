@@ -11,7 +11,6 @@ Application2D::~Application2D()
 bool Application2D::startup()
 {
 	m_2dRenderer = new aie::Renderer2D();
-	m_shipTexture = new aie::Texture("./textures/ship.png");
 	m_triangle = new aie::Texture("./textures/triangle.png");
 	m_background = new aie::Texture("./textures/space.png");
 	m_crews = new aie::Texture("./textures/crews.png");
@@ -26,11 +25,9 @@ bool Application2D::startup()
 	setup();
 	return true;
 }
-
 void Application2D::shutdown()
 {
 	delete m_font;
-	delete m_shipTexture;
 	delete m_triangle;
 	delete m_background;
 	delete m_crews;
@@ -98,7 +95,7 @@ void Application2D::update(float deltaTime)
 		}
 		//Checks if lasers hit an enemy
 		for (int e = 0; e < 15; e++)
-			mEnemies[e].HitCheck(mLaser, mLaserNum);
+			mEnemies[e].LaserCheck(mLaser, mLaserNum);
 		//Checking to see if all enemies are dead
 		deadEnemies = 0;
 		for (int e = 0; e < 15; e++)
@@ -120,10 +117,8 @@ void Application2D::update(float deltaTime)
 			if (mEnemies[i].mPos.mY < 0)
 				mPlayer->mIsAlive = false;
 			if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
-			{
 				if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
 					mPlayer->mIsAlive = false;
-			}
 		}
 	}
 	// exit the application

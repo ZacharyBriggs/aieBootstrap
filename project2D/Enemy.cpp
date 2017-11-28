@@ -14,7 +14,7 @@ void Enemy::Move(float timer)
 {
 	mPos.mY -= 50.0f * timer;
 }
-void Enemy::HitCheck(Laser *laser,int lasernum)
+void Enemy::LaserCheck(Laser *laser,int lasernum)
 {
 	for (int i = 0; i < lasernum; i++)
 	{
