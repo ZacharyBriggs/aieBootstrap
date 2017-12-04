@@ -114,10 +114,10 @@ void Application2D::update(const float deltaTime)
 		//Enemy Movement
 		for (int i = 0; i < numEnemies; i++)
 			mEnemies[i].Move(deltaTime);
-		//Checks to see if an enemy has touched the player
+		//Checks to see if an enemy has touched the player or gotten past the player
 		for (int i = 0; i < numEnemies; i++)
 		{
-			if (mEnemies[i].mPos.mY < 0)
+			if (mEnemies[i].mPos.mY < 120)
 				mPlayer->mIsAlive = false;
 			if (mEnemies[i].mPos.mX > mPlayer->mPos.mX - (mPlayer->mScale.mX / 2) && mEnemies[i].mPos.mX < mPlayer->mPos.mX + (mPlayer->mScale.mX / 2))
 				if (mEnemies[i].mPos.mY > mPlayer->mPos.mY - (mPlayer->mScale.mY / 2) && mEnemies[i].mPos.mY < mPlayer->mPos.mY + (mPlayer->mScale.mY / 2))
@@ -181,7 +181,7 @@ void Application2D::draw()
 	{
 		m_2dRenderer->drawSprite(m_victory, 640, 360, 1280, 720);
 		m_2dRenderer->setRenderColour(0, 0, 0, 1);
-		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
+		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 335, 360);
 		if (input->isKeyDown(aie::INPUT_KEY_Y))
 			setup();
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))
@@ -191,8 +191,8 @@ void Application2D::draw()
 	if (mPlayer->mIsAlive == false)
 	{
 		m_2dRenderer->drawSprite(m_failure, 640, 360, 1280, 720);
-		m_2dRenderer->setRenderColour(0, 0, 0, 1);
-		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 640, 100);
+		m_2dRenderer->setRenderColour(1, 1, 1, 1);
+		m_2dRenderer->drawText(m_font, "Would you like to play again? Y/N", 335, 360);
 		if (input->wasKeyPressed(aie::INPUT_KEY_Y))
 			setup();
 		if (input->wasKeyPressed(aie::INPUT_KEY_N))

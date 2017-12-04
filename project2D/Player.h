@@ -3,6 +3,7 @@
 class Player : public Entity
 {
 public:
+	bool mIsAlive;
 	Player();
 	/*Prototype:Player();
 	Description: Constructor for player class.
@@ -17,5 +18,4 @@ public:
 	Precondition : None.
 	Postcondition : A Player is deleted.
 	Protection : Public.*/
-	bool mIsAlive;
 };

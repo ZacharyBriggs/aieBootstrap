@@ -3,6 +3,7 @@
 class Laser : public Entity
 {
 public:
+	bool mIsFired;
 	Laser();
 	/*Prototype:Laser();
 	Description: The constructor for the laser class
@@ -17,7 +18,6 @@ public:
 	Precondition : None.
 	Postcondition : A laser is deleted
 	Protection : Public.*/
-	bool mIsFired;
 	void Fire(Vector2 pos);
 	/*Prototype:void Fire(Vector2 pos);
 	Description: Sets a laser to fired and sets their position to the one passed in
