@@ -42,18 +42,18 @@ void Application2D::setup()
 {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
-	numEnemies = 15;
+	numEnemies = 30;
 	mEnemies = new Enemy[numEnemies];
 	deadEnemies = 0;
 	float enePosX = 450;
-	float enePosY = 600;
+	float enePosY = 1300;
 	//Initilizes and assigns all the enemies positions
 	for (int i = 0; i < numEnemies; i++)
 	{
 		mEnemies[i].mPos.mX = enePosX;
 		mEnemies[i].mPos.mY = enePosY;
-		enePosX += 100;
-		if (enePosX == 950)
+		enePosX += 110;
+		if (enePosX > 1000)
 		{
 			enePosX = 450;
 			enePosY -= 100;
