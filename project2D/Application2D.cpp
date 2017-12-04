@@ -87,17 +87,17 @@ void Application2D::update(const float deltaTime)
 		//Player Firing
 		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 		{
-			if (mLaserNum != 0)
-				mLaser[mLaserNum - 1].Fire(playerPos);
-			Laser *temp = new Laser[mLaserNum + 1];
-			for (int i = 0; i < mLaserNum; i++)
-				temp[i] = mLaser[i];
-			delete[] mLaser;
-			mLaser = new Laser[mLaserNum + 1];
-			for (int i = 0; i < mLaserNum; i++)
-				mLaser[i] = temp[i];
-			delete[] temp;
-			mLaserNum++;
+				if (mLaserNum != 0)
+					mLaser[mLaserNum - 1].Fire(playerPos);
+				Laser *temp = new Laser[mLaserNum + 1];
+				for (int i = 0; i < mLaserNum; i++)
+					temp[i] = mLaser[i];
+				delete[] mLaser;
+				mLaser = new Laser[mLaserNum + 1];
+				for (int i = 0; i < mLaserNum; i++)
+					mLaser[i] = temp[i];
+				delete[] temp;
+				mLaserNum++;
 		}
 		//Checks if lasers hit an enemy
 		for (int e = 0; e < numEnemies; e++)

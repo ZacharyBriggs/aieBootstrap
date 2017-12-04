@@ -12,7 +12,7 @@ Enemy::~Enemy()
 }
 void Enemy::Move(const float timer)
 {
-	mPos.mY -= 50.0f * timer;
+	mPos.mY -= 75.0f * timer;
 }
 void Enemy::LaserCheck(Laser *laser,const int lasernum)
 {
