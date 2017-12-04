@@ -42,6 +42,9 @@ void Application2D::setup()
 {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
+	mBackground = new Entity;
+	mBackground2 = new Entity;
+	mBackground2->mPos.mY = 1080;
 	numEnemies = 30;
 	mEnemies = new Enemy[numEnemies];
 	deadEnemies = 0;
@@ -114,6 +117,12 @@ void Application2D::update(const float deltaTime)
 		//Enemy Movement
 		for (int i = 0; i < numEnemies; i++)
 			mEnemies[i].Move(deltaTime);
+		mBackground->mPos.mY -= 50.0f*deltaTime;
+		if (mBackground->mPos.mY < -360)
+			mBackground->mPos.mY = 1079;
+		mBackground2->mPos.mY -= 50.0f*deltaTime;
+		if (mBackground2->mPos.mY < -360)
+			mBackground2->mPos.mY = 1079;
 		//Checks to see if an enemy has touched the player or gotten past the player
 		for (int i = 0; i < numEnemies; i++)
 		{
@@ -142,7 +151,8 @@ void Application2D::draw()
 		gameStart = true;
 	if (gameStart)
 	{
-		m_2dRenderer->drawSprite(m_background, 640, 360, 1280, 720);
+		m_2dRenderer->drawSprite(m_background, mBackground->mPos.mX, mBackground->mPos.mY, 1280, 720);
+		m_2dRenderer->drawSprite(m_background, mBackground2->mPos.mX, mBackground2->mPos.mY, 1280, 720);
 		if (input->wasKeyPressed(aie::INPUT_KEY_F3))
 			secret = true;
 		if (secret == true)

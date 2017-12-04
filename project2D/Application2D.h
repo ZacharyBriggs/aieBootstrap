@@ -39,4 +39,6 @@ protected:
 	bool gameStart;
 	bool gameWon;
 	bool secret;
+	Entity *mBackground;
+	Entity *mBackground2;
 };
