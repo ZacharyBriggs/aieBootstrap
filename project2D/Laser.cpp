@@ -1,8 +1,8 @@
 #include "Laser.h"
 Laser::Laser()
 {
-	mPos.mY = 0;
-	mPos.mX = 0;
+	mPos.mY = -1000;
+	mPos.mX = -1000;
 	mScale.mX = 10;
 	mScale.mY = 25;
 	mIsFired = false;
