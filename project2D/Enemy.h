@@ -25,6 +25,7 @@ public:
 	Precondition : The enemy's position is static and unchanging
 	Postcondition : The enemy will move downward.
 	Protection : Public.*/
+	void EnemyFire();
 	void LaserCheck(Laser *laser,int lasernum);
 	/*Prototype:void LaserCheck(Laser *laser,int lasernum);
 	Description: Checks to see if a laser is colliding with an enemy

@@ -32,10 +32,12 @@ protected:
 	float m_timer;
 	Player *mPlayer;
 	Laser *mLaser;
+	Laser *mEnemyLaser;
 	int numEnemies;
 	Enemy *mEnemies;
 	int deadEnemies;
 	int mLaserNum;
+	int mEnemyLaserNum;
 	bool gameStart;
 	bool gameWon;
 	bool secret;

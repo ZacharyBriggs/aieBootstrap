@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "Laser.h"
 class Player : public Entity
 {
 public:
@@ -18,4 +18,5 @@ public:
 	Precondition : None.
 	Postcondition : A Player is deleted.
 	Protection : Public.*/
+	void LaserCheck(Laser *laser, int lasernum);
 };

@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include <stdlib.h>
+#include <time.h>
 #include <Vector2.h>
 
 Application2D::Application2D()
@@ -12,6 +14,7 @@ Application2D::~Application2D()
 }
 bool Application2D::startup()
 {
+	srand(time(NULL));
 	m_2dRenderer = new aie::Renderer2D();
 	m_triangle = new aie::Texture("./textures/triangle.png");
 	m_background = new aie::Texture("./textures/space.png");
@@ -42,14 +45,15 @@ void Application2D::setup()
 {
 	mPlayer = new Player;
 	mLaser = new Laser[1];
+	mEnemyLaser = new Laser[1];
 	mBackground = new Entity;
 	mBackground2 = new Entity;
 	mBackground2->mPos.mY = 1080;
-	numEnemies = 30;
+	numEnemies = 21;
 	mEnemies = new Enemy[numEnemies];
 	deadEnemies = 0;
-	float enePosX = 450;
-	float enePosY = 1300;
+	float enePosX = 340;
+	float enePosY = 1000;
 	//Initilizes and assigns all the enemies positions
 	for (int i = 0; i < numEnemies; i++)
 	{
@@ -58,11 +62,12 @@ void Application2D::setup()
 		enePosX += 110;
 		if (enePosX > 1000)
 		{
-			enePosX = 450;
+			enePosX = 340;
 			enePosY -= 100;
 		}
 	}
 	mLaserNum = 0;
+	mEnemyLaserNum = 0;
 	gameWon = false;
 	secret = false;
 }
@@ -72,6 +77,7 @@ void Application2D::update(const float deltaTime)
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	const Vector2 playerPos(mPlayer->mPos.mX, mPlayer->mPos.mY);
+	const Vector2 enePos(mEnemies[29].mPos.mX, mEnemies[29].mPos.mY);
 	if (gameStart)
 	{
 		//Player movement
@@ -102,6 +108,7 @@ void Application2D::update(const float deltaTime)
 		//Checks if lasers hit an enemy
 		for (int e = 0; e < numEnemies; e++)
 			mEnemies[e].LaserCheck(mLaser, mLaserNum);
+		mPlayer->LaserCheck(mEnemyLaser, mEnemyLaserNum);
 		//Checking to see if all enemies are dead
 		deadEnemies = 0;
 		for (int e = 0; e < numEnemies; e++)
@@ -111,9 +118,33 @@ void Application2D::update(const float deltaTime)
 			if (deadEnemies == numEnemies)
 				gameWon = true;
 		}
+		//Enemy Firing
+		if(m_timer >= .3)
+		{
+			m_timer = 0;
+
+			int randNum = rand() % 29 + 1;
+			while (mEnemies[randNum].mIsAlive == false)
+				randNum = rand() % 29 + 0;
+			if (mEnemyLaserNum != 0)
+				mEnemyLaser[mEnemyLaserNum - 1].Fire(mEnemies[randNum].mPos);
+			else
+				mEnemyLaser[mEnemyLaserNum].Fire(enePos);
+			Laser *temp = new Laser[mEnemyLaserNum + 1];
+			for (int i = 0; i < mEnemyLaserNum; i++)
+				temp[i] = mEnemyLaser[i];
+			delete[] mEnemyLaser;
+			mEnemyLaser = new Laser[mEnemyLaserNum + 1];
+			for (int i = 0; i < mEnemyLaserNum; i++)
+				mEnemyLaser[i] = temp[i];
+			delete[] temp;
+			mEnemyLaserNum++;
+		}
 		//Updates the lasers postion
 		for (int i = 0; i < mLaserNum; i++)
 			mLaser[i].Update(deltaTime);
+		for(int i = 0;i<mEnemyLaserNum;i++)
+			mEnemyLaser[i].mPos.mY -= 500.0f* deltaTime;
 		//Enemy Movement
 		for (int i = 0; i < numEnemies; i++)
 			mEnemies[i].Move(deltaTime);
@@ -178,7 +209,14 @@ void Application2D::draw()
 				m_2dRenderer->drawBox(mEnemies[i].mPos.mX, mEnemies[i].mPos.mY, mEnemies[i].mScale.mX, mEnemies[i].mScale.mY);
 			}
 		}
-
+		for (int i = 0; i<mEnemyLaserNum; i++)
+		{
+			if (mEnemyLaser[i].mIsFired)
+			{
+				m_2dRenderer->setRenderColour(0, 1, 0, 1);
+				m_2dRenderer->drawBox(mEnemyLaser[i].mPos.mX, mEnemyLaser[i].mPos.mY, 10, 25);
+			}
+		}
 		// output some text, uses the last used colour
 		m_2dRenderer->setRenderColour(1, 1, 1, 1);
 		char fps[32];
