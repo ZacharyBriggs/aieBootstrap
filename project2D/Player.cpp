@@ -10,7 +10,6 @@ Player::Player()
 Player::~Player()
 {
 }
-
 void Player::LaserCheck(Laser * laser, int lasernum)
 {
 	for (int i = 0; i < lasernum; i++)

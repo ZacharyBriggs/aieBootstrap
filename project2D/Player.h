@@ -19,4 +19,10 @@ public:
 	Postcondition : A Player is deleted.
 	Protection : Public.*/
 	void LaserCheck(Laser *laser, int lasernum);
+	/*Prototype:void LaserCheck(Laser *laser, int lasernum);
+	Description: Checks to see if a laser is colliding with the player
+	Arguments : The laser being checked and the number of lasers fired so far.
+	Precondition : None.
+	Postcondition : mIsAlive is set to false.
+	Protection : Public.*/
 };

@@ -14,9 +14,6 @@ void Enemy::Move(const float timer)
 {
 	mPos.mY -= 50.0f * timer;
 }
-void Enemy::EnemyFire()
-{
-}
 void Enemy::LaserCheck(Laser *laser,const int lasernum)
 {
 	for (int i = 0; i < lasernum; i++)
