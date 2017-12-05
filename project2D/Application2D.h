@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "Renderer2D.h"
 #include "Entity.h"
+#include "Laser.h"
+
 class Application2D : public aie::Application {
 public:
 	Application2D();
@@ -19,4 +21,8 @@ protected:
 	float m_timer;
 	Entity *mPlayer;
 	Entity *mCursor;
+	int mCursorPosX;
+	int mCursorPosY;
+	Laser *mLaser;
+	int mLaserNum;
 };

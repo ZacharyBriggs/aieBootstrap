@@ -20,6 +20,8 @@ bool Application2D::startup()
 	m_timer = 0;
 	mPlayer = new Entity;
 	mCursor = new Entity;
+	mLaser = new Laser[1];
+	mLaserNum = 0;
 	setShowCursor(false);
 	return true;
 }
@@ -52,6 +54,23 @@ void Application2D::update(float deltaTime)
 		mPlayer->mX -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		mPlayer->mX += 500.0f*deltaTime;
+	//Player Firing
+	if (input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT))
+	{
+		mCursorPosX = input->getMouseX();
+		mCursorPosY = input->getMouseY();
+		if (mLaserNum != 0)
+			mLaser[mLaserNum - 1].Fire(mCursorPosX,mCursorPosY);
+		Laser *temp = new Laser[mLaserNum + 1];
+		for (int i = 0; i < mLaserNum; i++)
+			temp[i] = mLaser[i];
+		delete[] mLaser;
+		mLaser = new Laser[mLaserNum + 1];
+		for (int i = 0; i < mLaserNum; i++)
+			mLaser[i] = temp[i];
+		delete[] temp;
+		mLaserNum++;
+	}
 	mCursor->mX = input->getMouseX();
 	mCursor->mY = input->getMouseY();
 	// exit the application
@@ -70,6 +89,14 @@ void Application2D::draw()
 	m_2dRenderer->drawBox(mPlayer->mX, mPlayer->mY, 50, 50);
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	m_2dRenderer->drawCircle(mCursor->mX, mCursor->mY, 10, 10);
+	for (int i = 0; i < mLaserNum; i++)
+	{
+		if (mLaser[i].mIsFired)
+		{
+			m_2dRenderer->setRenderColour(1, 1, 1, 1);
+			m_2dRenderer->drawBox(mLaser[i].mX, mLaser[i].mY, 20, 20);
+		}
+	}
 	// output some text, uses the last used colour
 	char fps[32];
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
