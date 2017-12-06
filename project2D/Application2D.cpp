@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include "imgui.h"
 
 Application2D::Application2D()
 {
@@ -18,10 +19,11 @@ bool Application2D::startup()
 	m_cameraX = 0;
 	m_cameraY = 0;
 	m_timer = 0;
-	mPlayer = new Entity;
+	mPlayer = new Player;
 	mCursor = new Entity;
 	mLaser = new Laser[1];
 	mLaserNum = 0;
+	color = 0;
 	setShowCursor(false);
 	return true;
 }
@@ -47,20 +49,20 @@ void Application2D::update(float deltaTime)
 	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		m_cameraX += 500.0f * deltaTime;*/
 	if (input->isKeyDown(aie::INPUT_KEY_W))
-		mPlayer->mY += 500.0f * deltaTime;
+		mPlayer->mY += mPlayer->mSpeed* deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_S))
-		mPlayer->mY -= 500.0f*deltaTime;
+		mPlayer->mY -= mPlayer->mSpeed*deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_A))
-		mPlayer->mX -= 500.0f * deltaTime;
+		mPlayer->mX -= mPlayer->mSpeed* deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_D))
-		mPlayer->mX += 500.0f*deltaTime;
+		mPlayer->mX += mPlayer->mSpeed*deltaTime;
 	//Player Firing
-	if (input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT))
+	mCursorPosX = input->getMouseX();
+	mCursorPosY = input->getMouseY();
+	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT))
 	{
-		mCursorPosX = input->getMouseX();
-		mCursorPosY = input->getMouseY();
 		if (mLaserNum != 0)
-			mLaser[mLaserNum - 1].Fire(mCursorPosX,mCursorPosY);
+			mLaser[mLaserNum - 1].Fire(mPlayer->mX,mPlayer->mY);
 		Laser *temp = new Laser[mLaserNum + 1];
 		for (int i = 0; i < mLaserNum; i++)
 			temp[i] = mLaser[i];
@@ -71,6 +73,16 @@ void Application2D::update(float deltaTime)
 		delete[] temp;
 		mLaserNum++;
 	}
+	for(int i = 0;i<mLaserNum;i++)
+		mLaser[i].Update(deltaTime);
+	if (input->isKeyDown(aie::INPUT_KEY_1))
+		color = 0;
+	if (input->isKeyDown(aie::INPUT_KEY_2))
+		color = 1;
+	if (input->isKeyDown(aie::INPUT_KEY_3))
+		color = 2;
+	if (input->isKeyDown(aie::INPUT_KEY_4))
+		color = 3;
 	mCursor->mX = input->getMouseX();
 	mCursor->mY = input->getMouseY();
 	// exit the application
@@ -85,17 +97,21 @@ void Application2D::draw()
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	// begin drawing sprites
 	m_2dRenderer->begin();
-	m_2dRenderer->setRenderColour(0, 1, 0, 1);
-	m_2dRenderer->drawBox(mPlayer->mX, mPlayer->mY, 50, 50);
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
+	m_2dRenderer->drawSprite(m_shipTexture,mPlayer->mX, mPlayer->mY, mPlayer->mScaleX, mPlayer->mScaleY,tan(mCursorPosY - mCursorPosX));
+	if (color == 0)
+		m_2dRenderer->setRenderColour(1, 1, 1, 1);
+	if (color == 1)
+		m_2dRenderer->setRenderColour(1, 0, 0, 1);
+	if (color == 2)
+		m_2dRenderer->setRenderColour(0, 1, 0, 1);
+	if (color == 3)
+		m_2dRenderer->setRenderColour(0, 0, 1, 1);
 	m_2dRenderer->drawCircle(mCursor->mX, mCursor->mY, 10, 10);
 	for (int i = 0; i < mLaserNum; i++)
 	{
 		if (mLaser[i].mIsFired)
-		{
-			m_2dRenderer->setRenderColour(1, 1, 1, 1);
-			m_2dRenderer->drawBox(mLaser[i].mX, mLaser[i].mY, 20, 20);
-		}
+			m_2dRenderer->drawBox(mLaser[i].mX, mLaser[i].mY, mLaser[i].mScaleX, mLaser[i].mScaleY);
 	}
 	// output some text, uses the last used colour
 	char fps[32];

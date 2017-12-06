@@ -1,8 +1,9 @@
 #pragma once
 #include "Application.h"
 #include "Renderer2D.h"
-#include "Entity.h"
+#include "Player.h"
 #include "Laser.h"
+#include <math.h>
 
 class Application2D : public aie::Application {
 public:
@@ -19,10 +20,11 @@ protected:
 	aie::Font*			m_font;
 	float m_cameraX, m_cameraY;
 	float m_timer;
-	Entity *mPlayer;
+	Player *mPlayer;
 	Entity *mCursor;
 	int mCursorPosX;
 	int mCursorPosY;
 	Laser *mLaser;
 	int mLaserNum;
+	int color;
 };
