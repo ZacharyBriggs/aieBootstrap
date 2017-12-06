@@ -85,13 +85,14 @@ void Application2D::update(const float deltaTime)
 			mPlayer->mPos.mX -= 250.0f * deltaTime;
 		if (input->isKeyDown(aie::INPUT_KEY_D))
 			mPlayer->mPos.mX += 250.0f * deltaTime;
+		mPlayer->mPos.mX = input->getMouseX();
 		//Boundaries
 		if (mPlayer->mPos.mX > 1250)
 			mPlayer->mPos.mX = 1249;
 		if (mPlayer->mPos.mX < 30)
 			mPlayer->mPos.mX = 29;
 		//Player Firing
-		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
+		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE) || input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT))
 		{
 				if (mLaserNum != 0)
 					mLaser[mLaserNum - 1].Fire(playerPos);
