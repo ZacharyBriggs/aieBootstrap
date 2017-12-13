@@ -40,14 +40,14 @@ void Application2D::update(float deltaTime)
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	// use arrow keys to move camera
-	/*if (input->isKeyDown(aie::INPUT_KEY_UP))
+	if (input->isKeyDown(aie::INPUT_KEY_UP))
 		m_cameraY += 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_DOWN))
 		m_cameraY -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
 		m_cameraX -= 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
-		m_cameraX += 500.0f * deltaTime;*/
+		m_cameraX += 500.0f * deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_W))
 		mPlayer->mY += mPlayer->mSpeed* deltaTime;
 	if (input->isKeyDown(aie::INPUT_KEY_S))
@@ -98,7 +98,7 @@ void Application2D::draw()
 	// begin drawing sprites
 	m_2dRenderer->begin();
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
-	m_2dRenderer->drawSprite(m_shipTexture,mPlayer->mX, mPlayer->mY, mPlayer->mScaleX, mPlayer->mScaleY,tan(mCursorPosY - mCursorPosX));
+	m_2dRenderer->drawSprite(m_shipTexture,mPlayer->mX, mPlayer->mY, mPlayer->mScaleX, mPlayer->mScaleY,((sqrt(((mCursorPosY - mPlayer->mY)*(mCursorPosY - mPlayer->mY))/((mPlayer->mX -mCursorPosX)*(mPlayer->mX - mCursorPosX)))*3.14)/360));
 	if (color == 0)
 		m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	if (color == 1)
