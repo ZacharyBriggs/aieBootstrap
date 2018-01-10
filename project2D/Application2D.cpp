@@ -4,11 +4,9 @@
 #include "Input.h"
 Application2D::Application2D()
 {
-
 }
 Application2D::~Application2D()
 {
-
 }
 bool Application2D::startup()
 {
@@ -26,7 +24,6 @@ bool Application2D::startup()
 }
 void Application2D::shutdown()
 {
-
 	delete mFont;
 	delete mTexture;
 	delete mShipTexture;

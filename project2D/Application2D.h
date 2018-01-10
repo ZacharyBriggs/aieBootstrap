@@ -3,7 +3,6 @@
 #include "Enemy.h"
 #include "Application.h"
 #include "Renderer2D.h"
-
 class Application2D : public aie::Application
 {
 public:
