@@ -66,9 +66,14 @@ void Application2D::update(float deltaTime)
 			mLasers->InsertFirst(*newLaser);
 		mNumLasers++;
 	}
+	Iter = mLasers->Begin();
 	//Updates Laser Position
-	/*for (int i = 0; i < mNumLasers; i++)
-		Iter.operator*().Update(deltaTime);*/
+	for (int i = 0; i < mNumLasers; i++)
+	{
+		Iter.operator*().Update(deltaTime);
+		Iter.operator++();
+	}
+	Iter = mLasers->Begin();
 	//Boundaries
 	if (mPlayer->GetPosX() > 1250)
 		mPlayer->ChangePosX(1249);
@@ -83,7 +88,6 @@ void Application2D::draw()
 	clearScreen();
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	m_2dRenderer->begin();
-	Iter = mLasers->Begin();
 	if (mPlayer->mIsAlive == true)
 	{
 		m_2dRenderer->setRenderColour(1, 0, 0, 1);
@@ -98,6 +102,7 @@ void Application2D::draw()
 		}
 		Iter.operator++();
 	}
+	Iter = mLasers->Begin();
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	m_2dRenderer->drawSprite(mEnemyShip,mEnemy->GetPosX(),mEnemy->GetPosY(),mEnemy->GetWidth(),mEnemy->GetHeight());
 	char fps[32];
