@@ -79,15 +79,12 @@ public:
 	//Returns true if searchItem is in the list, otherwise the value false is reutned
 	bool Search(const Type& searchItem) const
 	{
-		NodeType<Type> temp;
-		temp = first;
-		while (temp != NULL)
+		NodeType<Type> *temp = first;
+		for(int i = 0;i<count;i++)
 		{
-			if (searchItem == temp.info)
-			{
+			if (searchItem == temp->info)
 				return true;
-			}
-			temp = temp->link
+			temp = temp->link;
 		}
 		return false;
 	}
@@ -111,34 +108,45 @@ public:
 	{
 		NodeType<Type> *lastNode = new NodeType<Type>;
 		lastNode->info = newItem;
-		last->link = lastNode;
+		if (count != 0)
+			last->link = lastNode;
+		else
+			first = last;
 		last = lastNode;
 		count++;
 	}
 	//Deletes deleteItem from the list
 	//If found, the node containing deleteItem is deleted from the list.
-	//First point to the first node, list points to the last node of the updated list, and counts is decremented by 1
+	//First point to the first node, last points to the last node of the updated list, and count is decremented by 1
 	void DeleteNode(const Type& deleteItem)
 	{
-		delete deleteItem;
-		if (count > 0)
+		assert(Search(deleteItem) == true);
+		NodeType<Type> *tempNode = new NodeType<Type>;
+		NodeType<Type> *tempNode2 = new NodeType<Type>;
+		tempNode = first;
+		if (tempNode->link->info == deleteItem)
 		{
-			count -= 1;
+			tempNode2 = tempNode->link;
+			tempNode->link = tempNode2->link;
+			delete tempNode2;
 		}
+		else
+			tempNode = tempNode->link;
+		count -= 1;
 	}
 	//Returns an iterator at the beginning of the linked list
 	//Reutns an iterator such that current is set to first
 	LinkedListIterator<Type> Begin()
 	{
-		LinkedListIterator<Type> *temp = new LinkedListIterator<Type>();
-		temp->current = first;
+		LinkedListIterator<Type> *temp = new LinkedListIterator<Type>(first);
+		return *temp;
 	}
 	//Returns an iterator at the end of the linked list
 	//Returns an iterator such that current is set to NUll
 	LinkedListIterator<Type> End()
 	{
-		LinkedListIterator<Type> *temp = new LinkedListIterator<Type>();
-		temp->current = last;
+		LinkedListIterator<Type> *temp = new LinkedListIterator<Type>(last);
+		return *temp;
 	}
 	//Default constructor
 	LinkedListType()

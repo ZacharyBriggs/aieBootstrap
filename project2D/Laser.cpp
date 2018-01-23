@@ -16,3 +16,7 @@ void Laser::Update(float timer)
 	if (mIsAlive)
 		mPos.mY += 500.0f * timer;
 }
+bool Laser::operator==(const Laser & h)
+{
+	return mIsAlive = h.mIsAlive;
+}

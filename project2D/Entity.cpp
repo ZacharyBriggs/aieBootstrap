@@ -21,6 +21,10 @@ void Entity::ChangePosY(float change)
 {
 	mPos.mY = change;
 }
+Vector2 Entity::GetPosXY()
+{
+	return mPos;
+}
 int Entity::GetWidth()
 {
 	return mScale.mX;

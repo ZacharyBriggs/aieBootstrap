@@ -17,6 +17,9 @@ bool Application2D::startup()
 	mFont = new aie::Font("./font/consolas.ttf", 32);
 	mPlayer = new Player;
 	mEnemy = new Enemy;
+	mLaser = new Laser;
+	mLasers = new LinkedListType<Laser>;
+	mLasers->InitializeList();
 	m_cameraX = 0;
 	m_cameraY = 0;
 	m_timer = 0;
@@ -33,6 +36,7 @@ void Application2D::update(float deltaTime)
 {
 	m_timer += deltaTime;
 	// input example
+	Iter = mLasers->Begin();
 	aie::Input* input = aie::Input::getInstance();
 	// use arrow keys to move camera
 	if (input->isKeyDown(aie::INPUT_KEY_UP))
@@ -48,6 +52,20 @@ void Application2D::update(float deltaTime)
 		mPlayer->ChangePosX(mPlayer->GetPosX() - 500.0f * deltaTime);
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		mPlayer->ChangePosX(mPlayer->GetPosX() + 500.0f * deltaTime);
+	//Firing Lasers
+	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
+	{
+		mLaser->Fire(mPlayer->GetPosXY());
+		if (mNumLasers > 0)
+		{
+			mLasers->InsertLast(*mLaser);
+			Iter.operator++();
+			std::cout << mLasers->Length() << std::endl;
+		}
+		else
+			mLasers->InsertFirst(*mLaser);
+		mNumLasers++;
+	}
 	//Boundaries
 	if (mPlayer->GetPosX() > 1250)
 		mPlayer->ChangePosX(1249);
@@ -66,6 +84,11 @@ void Application2D::draw()
 	{
 		m_2dRenderer->setRenderColour(1, 0, 0, 1);
 		m_2dRenderer->drawCircle(mPlayer->GetPosX(), mPlayer->GetPosY(), mPlayer->mRadius);
+	}
+	if(mLasers->Search(*mLaser))
+	{
+		m_2dRenderer->setRenderColour(0, 0, 1, 1);
+		m_2dRenderer->drawBox(mLaser->GetPosX(), mLaser->GetPosY(), 50, 50);
 	}
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	m_2dRenderer->drawSprite(mEnemyShip,mEnemy->GetPosX(),mEnemy->GetPosY(),mEnemy->GetWidth(),mEnemy->GetHeight());

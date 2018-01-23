@@ -3,6 +3,8 @@
 #include "Enemy.h"
 #include "Application.h"
 #include "Renderer2D.h"
+#include "Laser.h"
+#include <LinkedList.h>
 class Application2D : public aie::Application
 {
 public:
@@ -20,6 +22,10 @@ protected:
 	aie::Font*			mFont;
 	Player *mPlayer;
 	Enemy *mEnemy;
+	Laser *mLaser;
+	LinkedListType<Laser> *mLasers;
+	LinkedListIterator<Laser> Iter;
+	int mNumLasers = 0;
 	float m_cameraX, m_cameraY;
 	float m_timer;
 };

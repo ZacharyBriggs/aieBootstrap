@@ -13,6 +13,7 @@ public:
 	void ChangePosX(float change);
 	float GetPosY();
 	void ChangePosY(float change);
+	Vector2 GetPosXY();
 	int GetWidth();
 	int GetHeight();
 };
