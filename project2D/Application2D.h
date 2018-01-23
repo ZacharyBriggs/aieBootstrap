@@ -23,6 +23,7 @@ protected:
 	Player *mPlayer;
 	Enemy *mEnemy;
 	Laser *mLaser;
+	Laser *mLaser2;
 	LinkedListType<Laser> *mLasers;
 	LinkedListIterator<Laser> Iter;
 	int mNumLasers = 0;

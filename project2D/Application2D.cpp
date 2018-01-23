@@ -18,6 +18,7 @@ bool Application2D::startup()
 	mPlayer = new Player;
 	mEnemy = new Enemy;
 	mLaser = new Laser;
+	mLaser2 = new Laser;
 	mLasers = new LinkedListType<Laser>;
 	mLasers->InitializeList();
 	m_cameraX = 0;
@@ -36,7 +37,6 @@ void Application2D::update(float deltaTime)
 {
 	m_timer += deltaTime;
 	// input example
-	Iter = mLasers->Begin();
 	aie::Input* input = aie::Input::getInstance();
 	// use arrow keys to move camera
 	if (input->isKeyDown(aie::INPUT_KEY_UP))
@@ -55,17 +55,20 @@ void Application2D::update(float deltaTime)
 	//Firing Lasers
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
-		mLaser->Fire(mPlayer->GetPosXY());
-		if (mNumLasers > 0)
+		Laser  *newLaser = new Laser();
+		newLaser->Fire(mPlayer->GetPosXY());
+		if (mNumLasers > 1)
 		{
-			mLasers->InsertLast(*mLaser);
-			Iter.operator++();
+			mLasers->InsertLast(*newLaser);
 			std::cout << mLasers->Length() << std::endl;
 		}
 		else
-			mLasers->InsertFirst(*mLaser);
+			mLasers->InsertFirst(*newLaser);
 		mNumLasers++;
 	}
+	//Updates Laser Position
+	/*for (int i = 0; i < mNumLasers; i++)
+		Iter.operator*().Update(deltaTime);*/
 	//Boundaries
 	if (mPlayer->GetPosX() > 1250)
 		mPlayer->ChangePosX(1249);
@@ -80,15 +83,20 @@ void Application2D::draw()
 	clearScreen();
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	m_2dRenderer->begin();
+	Iter = mLasers->Begin();
 	if (mPlayer->mIsAlive == true)
 	{
 		m_2dRenderer->setRenderColour(1, 0, 0, 1);
 		m_2dRenderer->drawCircle(mPlayer->GetPosX(), mPlayer->GetPosY(), mPlayer->mRadius);
 	}
-	if(mLasers->Search(*mLaser))
+	for (int i = 0; i < mLasers->Length(); i++)
 	{
-		m_2dRenderer->setRenderColour(0, 0, 1, 1);
-		m_2dRenderer->drawBox(mLaser->GetPosX(), mLaser->GetPosY(), 50, 50);
+		if (Iter.operator*().mIsAlive == true)
+		{
+			m_2dRenderer->setRenderColour(0, 0, 1, 1);
+			m_2dRenderer->drawBox(Iter.operator*().GetPosX(), Iter.operator*().GetPosY(), 50, 50);
+		}
+		Iter.operator++();
 	}
 	m_2dRenderer->setRenderColour(1, 1, 1, 1);
 	m_2dRenderer->drawSprite(mEnemyShip,mEnemy->GetPosX(),mEnemy->GetPosY(),mEnemy->GetWidth(),mEnemy->GetHeight());
