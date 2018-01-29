@@ -48,6 +48,10 @@ void Application2D::update(float deltaTime)
 	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		m_cameraX += 500.0f * deltaTime;
 	//Moving Player
+	if(input->isKeyDown(aie::INPUT_KEY_W))
+		mPlayer->ChangePosY(mPlayer->GetPosY() + 500.0f * deltaTime);
+	if (input->isKeyDown(aie::INPUT_KEY_S))
+		mPlayer->ChangePosY(mPlayer->GetPosY() - 500.0f * deltaTime);
 	if (input->isKeyDown(aie::INPUT_KEY_A))
 		mPlayer->ChangePosX(mPlayer->GetPosX() - 500.0f * deltaTime);
 	if (input->isKeyDown(aie::INPUT_KEY_D))
@@ -75,6 +79,10 @@ void Application2D::update(float deltaTime)
 	}
 	Iter = mLasers->Begin();
 	//Boundaries
+	if (mPlayer->GetPosY() > 720)
+		mPlayer->ChangePosY(719);
+	if (mPlayer->GetPosY() < 30)
+		mPlayer->ChangePosY(29);
 	if (mPlayer->GetPosX() > 1250)
 		mPlayer->ChangePosX(1249);
 	if (mPlayer->GetPosX() < 30)
